@@ -1,0 +1,20 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+
+#maps-container1  button{
+    height: 90px;
+    width: 200px;
+    background-color: blue;
+}
+
+#maps-container1 {
+    height: auto;
+    width: auto;
+    border: 2px solid black;
+    
+}
