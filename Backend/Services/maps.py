@@ -25,10 +25,10 @@ def getlocation(lat:float , lon :float):
         if 'address' in data:
             state = data['address'].get('state', 'State not found')
             district = data['address'].get('state_district', data['address'].get('county', 'District not found'))
-            
+            pincode = data['address'].get('postcode', 'postcode not found')
             print(f"State: {state}")
             print(f"District: {district}")
-            return [district , state]
+            return [district , state, pincode]
         else:
             print("Location found, but address details are missing.")
             return []
@@ -56,7 +56,8 @@ def Convert(lan:float , lon:float):
         return {
             "status": "success",
             "district": userLocation[0],
-            "state": userLocation[1]
+            "state": userLocation[1],
+            "pincode":userLocation[2]
         }
     else:
         return {
