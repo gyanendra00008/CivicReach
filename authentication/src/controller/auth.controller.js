@@ -110,4 +110,56 @@ async function verifyEmail(req,res){
 
 }
 
-module.exports={register,verifyEmail}
+async function login(req,res){
+  const {email, password} = req.body;
+
+  // Find user by email
+  const user = await usermodel.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  if(!user.verified){
+    return res.status(401).json({ message: "User not verified. Please verify your email." });
+  }
+
+  // Check if password is correct
+   const isMatch = await bcrypt.compare(
+    password,
+    user.password
+);
+  if (!isMatch) {
+    return res.status(401).json({ message: "Invalid password" });
+  }
+   
+        // Generate OTP
+    const otp = generateOtp();
+
+    // Hash OTP before storing it
+   const otpHash= await bcrypt.hash(otp,12);
+
+    // Store OTP
+    await otpModel.create({
+        email,
+        user: user._id,
+        otpHash,
+        purpose:"login"
+    });
+
+    // Send OTP
+    const html = getOtpHtml(otp, "login");
+
+    await sendEmail(
+        email,
+        "Login OTP",
+        `Your login OTP is ${otp}`,
+        html
+    );
+
+    return res.status(200).json({
+        message: "OTP sent to your email",
+        email
+    });
+  }
+
+module.exports={register,verifyEmail,login}

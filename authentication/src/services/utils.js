@@ -2,14 +2,19 @@ function generateOtp(){
   return Math.floor(100000 + Math.random() * 900000).toString(); // Generates a 6-digit OTP
 }
 
-function getOtpHtml(otp){
+function getOtpHtml(otp, purpose = "registration"){
+  const title = purpose === "login" ? "Two-Factor Authentication" : "Verify your email address";
+  const message = purpose === "login"
+    ? "We detected a login attempt for your Civic Reach account. Please use the verification code below to complete your sign-in:"
+    : "Thank you for signing up for Civic Reach. Please use the verification code below to complete your registration process:";
+
   return `
   <!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Verify Your Email - Civic Reach</title>
+      <title>${title} - Civic Reach</title>
     </head>
     <body style="margin: 0; padding: 0; background-color: #fafafa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #18181b; -webkit-font-smoothing: antialiased;">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #fafafa; width: 100%; height: 100%;">
@@ -27,9 +32,9 @@ function getOtpHtml(otp){
               <!-- Body -->
               <tr>
                 <td style="padding: 32px 32px 24px 32px;">
-                  <h1 style="font-size: 18px; font-weight: 600; color: #09090b; margin: 0 0 16px 0; line-height: 1.4;">Verify your email address</h1>
+                  <h1 style="font-size: 18px; font-weight: 600; color: #09090b; margin: 0 0 16px 0; line-height: 1.4;">${title}</h1>
                   <p style="font-size: 14px; line-height: 22px; color: #3f3f46; margin: 0 0 24px 0;">
-                    Thank you for signing up for Civic Reach. Please use the verification code below to complete your registration process:
+                    ${message}
                   </p>
                   
                   <!-- OTP Code Box -->
