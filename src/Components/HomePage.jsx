@@ -2,7 +2,7 @@ import React from 'react'
 import bg from '../assets/img3.png'
 import hero from '../assets/hero.png'
  import pin from '../assets/pin.png'
- import Reveal from "../components/Reveal";
+import Reveal from "./Reveal";
  import HowItWorks from "./HowItWorks";
  import Authorities from "./Authorities";
  import Contact from "./Contact";
