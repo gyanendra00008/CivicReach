@@ -1,9 +1,20 @@
-const app=require("./src/app")
-const connectDB= require("./src/db/db")
-require("dotenv").config()
+require("dotenv").config();
+const app = require("./src/app");
+const connectDB = require("./src/db/db");
 
-connectDB();
+const PORT = process.env.PORT || 4000;
 
-app.listen("4000",()=>{
-  console.log("Server started");
-})
+async function startServer() {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`🚀 Authentication server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server due to database connection error.");
+    process.exit(1);
+  }
+}
+
+startServer();
+
