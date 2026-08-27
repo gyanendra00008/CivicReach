@@ -48,6 +48,13 @@ if (hasEmailCredentials) {
     };
   }
 
+  console.log("SMTP CONFIG:", {
+  host: transportConfig.host,
+  port: transportConfig.port,
+  secure: transportConfig.secure,
+  family: transportConfig.family,
+});
+
   transporter = nodemailer.createTransport(transportConfig);
 
   if (process.env.NODE_ENV !== "test") {
