@@ -3,13 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { FileText, Tag, AlignLeft, MapPin, Upload, Send } from "lucide-react";
 import bgImage from "../assets/img3.webp";
 
-const CATEGORIES = ["Water", "Electricity", "Roads", "Sanitation", "Health", "Other"];
+const CATEGORIES = [
+  "Electricity",
+  "Water supply",
+  "Traffic",
+  "Road & infrastructure",
+  "Environment",
+  "Public health",
+  "Public safety",
+  "Animal control",
+];
 
 export default function UploadPage() {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("Water");
+  const [category, setCategory] = useState("Electricity");
   const [description, setDescription] = useState("");
   const [location] = useState("Sector 12, Dwarka, New Delhi");
   const [photo, setPhoto] = useState(null);

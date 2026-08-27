@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import bg from '../assets/img3.png'
 import hero from '../assets/hero.png'
  import pin from '../assets/pin.png'
@@ -9,10 +9,12 @@ import Reveal from "./Reveal";
  import About from "./About";
  import Logo from "./Logo";
  import {useNavigate} from "react-router-dom";
+ import { Menu, X } from "lucide-react";
 
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <div
       className="min-h-screen w-full bg-cover bg-center relative text-white font-sans overflow-x-hidden"
@@ -26,27 +28,66 @@ const HomePage = () => {
       <div className="relative z-10 flex flex-col min-h-screen w-full max-w-[100%] mx-auto px-4">
         
         {/* Floating Navigation Bar */}
-        <nav className="mt-10 w-[98%] mx-auto ml-4xl flex items-center justify-between px-10 py-8 bg-[#0a1628]/90 border border-teal-500/30 rounded-2xl backdrop-blur-xl" style={{minHeight: '80px'}}>
-          {/* Logo */}
-         <Logo />
-          {/* Navigation Links */}
-         <div className="hidden md:flex items-center gap-8 text-base text-gray-300">
-  <a href="#home" className="text-white border-b-2 border-teal-400 pb-1 text-[18px] font-semibold">Home</a>
-  <a href="#how-it-works" className="hover:text-white transition-colors text-[18px] font-medium">How it Works</a>
-  <a href="#authorities" className="hover:text-white transition-colors text-[18px] font-medium">Authorities</a>
-  <a href="#about" className="hover:text-white transition-colors text-[18px] font-medium">About</a>
-  <a href="#contact" className="hover:text-white transition-colors text-[18px] font-medium">Contact</a>
-</div>
+        <nav className="mt-10 w-[98%] mx-auto flex flex-col px-4 sm:px-6 md:px-10 py-4 md:py-8 bg-[#0a1628]/90 border border-teal-500/30 rounded-2xl backdrop-blur-xl">
+          <div className="flex items-center justify-between w-full">
+            {/* Logo */}
+            <Logo />
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-4">
-            <button onClick={() => navigate( '/complaints')}className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
-              Track Complaint
-            </button>
-            <button onClick={() => navigate('/complaints/new')}className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
-              New Complaint
+            {/* Navigation Links - Desktop */}
+            <div className="hidden lg:flex items-center gap-8 text-base text-gray-300">
+              <a href="#home" className="text-white border-b-2 border-teal-400 pb-1 text-[18px] font-semibold">Home</a>
+              <a href="#how-it-works" className="hover:text-white transition-colors text-[18px] font-medium">How it Works</a>
+              <a href="#authorities" className="hover:text-white transition-colors text-[18px] font-medium">Authorities</a>
+              <a href="#about" className="hover:text-white transition-colors text-[18px] font-medium">About</a>
+              <a href="#contact" className="hover:text-white transition-colors text-[18px] font-medium">Contact</a>
+            </div>
+
+            {/* Action Buttons - Desktop */}
+            <div className="hidden lg:flex items-center gap-4">
+              <button onClick={() => navigate( '/complaints')}className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
+                Track Complaint
+              </button>
+              <button onClick={() => navigate('/complaints/new')}className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
+                New Complaint
+              </button>
+            </div>
+
+            {/* Mobile Hamburger Toggle */}
+            <button
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className="lg:hidden flex items-center gap-2 text-white p-2 hover:text-teal-400 active:scale-95 transition-all"
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X size={26} /> : <Menu size={26} />}
+              <span className="text-sm font-medium">Menu</span>
             </button>
           </div>
+
+          {/* Mobile Dropdown Menu */}
+          {menuOpen && (
+            <div className="lg:hidden flex flex-col gap-4 mt-6 pb-2">
+              <a href="#home" onClick={() => setMenuOpen(false)} className="text-white text-[16px] font-semibold border-b border-white/10 pb-3">Home</a>
+              <a href="#how-it-works" onClick={() => setMenuOpen(false)} className="text-gray-300 text-[16px] font-medium border-b border-white/10 pb-3">How it Works</a>
+              <a href="#authorities" onClick={() => setMenuOpen(false)} className="text-gray-300 text-[16px] font-medium border-b border-white/10 pb-3">Authorities</a>
+              <a href="#about" onClick={() => setMenuOpen(false)} className="text-gray-300 text-[16px] font-medium border-b border-white/10 pb-3">About</a>
+              <a href="#contact" onClick={() => setMenuOpen(false)} className="text-gray-300 text-[16px] font-medium border-b border-white/10 pb-3">Contact</a>
+
+              <div className="flex flex-col gap-3 mt-2">
+                <button
+                  onClick={() => { setMenuOpen(false); navigate('/complaints'); }}
+                  className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-6 py-3.5 rounded-md transition-all w-full"
+                >
+                  Track Complaint
+                </button>
+                <button
+                  onClick={() => { setMenuOpen(false); navigate('/complaints/new'); }}
+                  className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-6 py-3.5 rounded-md transition-all w-full"
+                >
+                  New Complaint
+                </button>
+              </div>
+            </div>
+          )}
         </nav>
 
         {/* Hero Section */}
