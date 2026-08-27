@@ -13,15 +13,12 @@ if (hasEmailCredentials) {
   if (process.env.EMAIL_PASS) {
     // Standard Google App Password authentication using Port 587 STARTTLS
     transportConfig = {
-      host: process.env.EMAIL_HOST || "smtp.gmail.com",
-      port: parseInt(process.env.EMAIL_PORT, 10) || 587,
-      secure: process.env.EMAIL_SECURE ? process.env.EMAIL_SECURE === "true" : false,
+      host: "smtp.gmail.com",
+      port: 587,
+      secure:  false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
-      },
-      tls: {
-        rejectUnauthorized: false,
       },
       family: 4, // Force IPv4 to avoid ENETUNREACH errors on IPv6-unsupported networks like Render
       connectionTimeout: 15000,
