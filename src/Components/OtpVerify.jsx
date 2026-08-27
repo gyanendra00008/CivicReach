@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
 import bgImage from "../assets/img3.webp";
+import { AUTH_API_URL } from "../config";
 
 export default function OtpVerify() {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ export default function OtpVerify() {
   };
 
   async function RegisterOtpvirification(otp){
-    const url = "http://localhost:4000/api/auth/verify-email";
+    const url = `${AUTH_API_URL}/api/auth/verify-email`;
 
     try{
       const response = await fetch(url , {

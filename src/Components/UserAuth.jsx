@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import bgImage from "../assets/img3.webp";
+import { AUTH_API_URL } from "../config";
 
 function Field({ icon, label, type, placeholder, value, onChange, error, endAdornment }) {
   return (
@@ -44,7 +45,7 @@ export default function UserAuth() {
   };
 
   async function Login(){
-    const url = "http://localhost:4000/api/auth/login";
+    const url = `${AUTH_API_URL}/api/auth/login`;
     try{
       setLoading(true);
       const response = await fetch(url , {
