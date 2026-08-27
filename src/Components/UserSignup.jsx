@@ -51,15 +51,48 @@ export default function UserSignup() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
     const newErrors = validate();
     setErrors(newErrors);
-    if (Object.keys(newErrors).length === 0) {
-      navigate("/login");
-    }
+    if (Object.keys(newErrors).length !== 0) {
+    return;
+  }
+  await Register();
   };
+  async function Register(){
 
+    const username = form.fullName;
+    const email = form.email;
+    const password = form.password;
+
+    if(username=="" || email==""|| password=="")console.log("shi se fill kro");
+    try{
+      const url = "http://localhost:4000/api/auth/register";
+      const response = await fetch(url , {
+        method:"POST",
+        headers:{"content-type":"application/json"},
+        body:JSON.stringify({
+          "username":username,
+          "email":email,
+          "password":password
+        })});
+
+      const result = await response.json();
+
+      if(!response.ok)console.log("kuchh gdbd ho gyi h");
+      else console.log(result);
+
+    }catch(e){
+      console.log(e);
+    }finally{
+      console.log("Request gyi thi")
+    }
+
+
+
+
+  }
   return (
     <div
       className="min-h-screen w-full flex items-center justify-center relative overflow-hidden px-4 py-8 sm:py-10 bg-cover bg-center"
