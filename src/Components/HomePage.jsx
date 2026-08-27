@@ -7,9 +7,12 @@ import Reveal from "./Reveal";
  import Authorities from "./Authorities";
  import Contact from "./Contact";
  import About from "./About";
+ import Logo from "./Logo";
+ import {useNavigate} from "react-router-dom";
 
 
 const HomePage = () => {
+  const navigate = useNavigate();
   return (
     <div
       className="min-h-screen w-full bg-cover bg-center relative text-white font-sans overflow-x-hidden"
@@ -25,13 +28,7 @@ const HomePage = () => {
         {/* Floating Navigation Bar */}
         <nav className="mt-10 w-[98%] mx-auto ml-4xl flex items-center justify-between px-10 py-8 bg-[#0a1628]/90 border border-teal-500/30 rounded-2xl backdrop-blur-xl" style={{minHeight: '80px'}}>
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-teal-400/20 flex items-center justify-center text-teal-300 border border-teal-400/30 text-xs font-bold">
-              📍
-            </div>
-            <h1 className="text-lg font-bold tracking-tight text-white">CivicRoute</h1>
-          </div>
-
+         <Logo />
           {/* Navigation Links */}
          <div className="hidden md:flex items-center gap-8 text-base text-gray-300">
   <a href="#home" className="text-white border-b-2 border-teal-400 pb-1 text-[18px] font-semibold">Home</a>
@@ -43,11 +40,11 @@ const HomePage = () => {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-4">
-            <button className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
+            <button onClick={() => navigate( '/complaints')}className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
               Track Complaint
             </button>
-            <button className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
-              Report Issue
+            <button onClick={() => navigate('/complaints/new')}className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
+              New Complaint
             </button>
           </div>
         </nav>
@@ -85,7 +82,7 @@ const HomePage = () => {
 </div>
           {/* Left Text Content */}
           
-          <div className=" max-w-3xl mx-auto text-center flex flex-col items-center translate-x-8 lg:translate-x-16 translate-y-10 lg:-translate-y-14">
+          <div className=" max-w-3xl mx-auto text-center flex flex-col items-center  translate-x-0 lg:translate-x-2 translate-y-10 lg:-translate-y-14">
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold leading-[1.12] tracking-tight mb-6 text-white">
               Every <br />
               complaint, <br />
@@ -99,11 +96,11 @@ const HomePage = () => {
             {/* CTA Buttons */}
               {/* CTA Buttons */}
    {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-4 mt-2 z-20 relative">
-              <button className="bg-teal-400 hover:bg-teal-300 text-black font-bold text-xl px-8 py-3.5 rounded-md shadow-lg hover:shadow-teal-400/50 transition-all duration-300">
+            <div className="flex flex-wrap items-center justify-start gap-4 mt-2 z-20 relative">
+              <button onClick={() => navigate('/login')} className="bg-teal-400 hover:bg-teal-300 text-black font-bold text-xl px-8 py-3.5 rounded-md shadow-lg hover:shadow-teal-400/50 transition-all duration-300">
                 ✉️ User Login
               </button>
-              <button className="border border-gray-400 text-white text-xl px-8 py-3.5 rounded-md hover:bg-white/10 transition-all duration-300">
+              <button onClick={() => navigate( '/authority')}className="border border-gray-400 text-white text-xl px-8 py-3.5 rounded-md hover:bg-white/10 transition-all duration-300">
                 🛡️ Authority Login
               </button>
   </div>

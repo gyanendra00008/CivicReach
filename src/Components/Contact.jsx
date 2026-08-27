@@ -23,7 +23,7 @@ const Contact = () => {
         </div>
 
         <div className="mt-10 text-white/20 text-sm text-center w-full">
-          © 2024 CivicReach. All rights reserved.
+          © 2026 CivicReach. All rights reserved.
         </div>
 
       </div>

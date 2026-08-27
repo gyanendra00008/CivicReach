@@ -15,11 +15,11 @@ const About = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 border border-cyan-400/20 rounded-2xl p-8 bg-[#0e1a2a]/40">
           <div>
-            <h3 className="text-4xl font-bold text-cyan-400">10K+</h3>
-            <p className="text-white/60 mt-2 text-sm">Reports Resolved</p>
+            <h3 className="text-4xl font-bold text-cyan-400">&lt;2 Min</h3>
+            <p className="text-white/60 mt-2 text-sm">To File Complaint</p>
           </div>
           <div className="border-y md:border-y-0 md:border-x border-white/10 py-6 md:py-0">
-            <h3 className="text-4xl font-bold text-cyan-400">50+</h3>
+            <h3 className="text-4xl font-bold text-cyan-400">10+</h3>
             <p className="text-white/60 mt-2 text-sm">Departments Onboarded</p>
           </div>
           <div>
