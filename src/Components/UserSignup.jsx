@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Phone, Lock } from "lucide-react";
 import bgImage from "../assets/img3.webp";
+import { AUTH_API_URL } from "../config";
 
 function Field({ icon, label, type, placeholder, value, onChange, error }) {
   return (
@@ -72,7 +73,7 @@ export default function UserSignup() {
     try {
       setLoading(true);
       setApiError("");
-      const url = "http://localhost:4000/api/auth/register";
+      const url = `${AUTH_API_URL}/api/auth/register`;
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

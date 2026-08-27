@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
 import bgImage from "../assets/img3.webp";
+import { AUTH_API_URL } from "../config";
 
 export default function LoginOtpVerify() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function LoginOtpVerify() {
   };
 
   async function LoginOtpVerification(otpCode) {
-    const url = "http://localhost:4000/api/auth/verify-login";
+    const url = `${AUTH_API_URL}/api/auth/verify-login`;
     try {
       setLoading(true);
       setError("");
