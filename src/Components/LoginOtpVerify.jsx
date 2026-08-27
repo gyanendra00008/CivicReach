@@ -3,33 +3,29 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
 import bgImage from "../assets/img3.webp";
 
-export default function OtpVerify() {
+export default function LoginOtpVerify() {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email || "your registered email";
 
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const inputRefs = useRef([]);
 
-  const handleChange = async (index, e) => {
-      const value = e.target.value.replace(/[^0-9]/g, "");
-      
+  const handleChange = (index, e) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    if (!value) {
       const newOtp = [...otp];
-      newOtp[index] = value ? value[value.length - 1] : "";
+      newOtp[index] = "";
       setOtp(newOtp);
-    
-      // Next input par focus bhejna
-      if (value && index < 5) {
-        inputRefs.current[index + 1]?.focus();
-      }
-    
-      
-      const completeOtp = newOtp.join("");
-      if (completeOtp.length === 6) {
-        await RegisterOtpvirification(completeOtp);
-      }
-    };
+      return;
+    }
+    const newOtp = [...otp];
+    newOtp[index] = value[value.length - 1];
+    setOtp(newOtp);
+    if (index < 5) inputRefs.current[index + 1]?.focus();
+  };
 
   const handleKeyDown = (index, e) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
@@ -37,33 +33,45 @@ export default function OtpVerify() {
     }
   };
 
-  async function RegisterOtpvirification(otp){
-    const url = "http://localhost:4000/api/auth/verify-email";
-
-    try{
-      const response = await fetch(url , {
-        method:"POST",
-        headers:{"content-type":"application/json"},
-        body:JSON.stringify({
-          "email":email,
-          "otp":otp,
+  async function LoginOtpVerification(otpCode) {
+    const url = "http://localhost:4000/api/auth/verify-login";
+    try {
+      setLoading(true);
+      setError("");
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          otp: otpCode,
         }),
       });
+
       const result = await response.json();
-    
-        if (!response.ok) {
-          setError(result.message || "Invalid or expired OTP");
-          return;
-        }
-    
-        // OTP Verify hone ke baad User ko Login page par bhejna
-        navigate("/login");
-    }catch(e){
-      console.log("There is Any error in Reg Otp");
-    }finally{
-      console.log("Request Gyi thi ek baar ");
+
+      if (!response.ok) {
+        setError(result.message || "Invalid or expired OTP");
+        return;
+      }
+
+      // Store tokens / user info if provided
+      if (result.accessToken) {
+        localStorage.setItem("accessToken", result.accessToken);
+      }
+      if (result.user) {
+        localStorage.setItem("user", JSON.stringify(result.user));
+      }
+
+      // Route to User Dashboard on successful verification
+      navigate("/user-dashboard", { state: { email, user: result.user } });
+    } catch (e) {
+      console.error("Error verifying login OTP:", e);
+      setError("Server unreachable. Please make sure backend is running.");
+    } finally {
+      setLoading(false);
     }
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const code = otp.join("");
@@ -71,12 +79,10 @@ export default function OtpVerify() {
       setError("Please enter the full 6-digit OTP");
       return;
     }
-    // OTP verified -> Route to Login page
-   await RegisterOtpvirification(code);
+    await LoginOtpVerification(code);
   };
 
   const handleResend = () => {
-    // TODO: hook up actual resend OTP API call
     setError("");
   };
 
@@ -94,10 +100,10 @@ export default function OtpVerify() {
               <ShieldCheck size={22} className="text-teal-400" />
             </div>
             <h1 className="text-xl sm:text-2xl font-semibold text-white">
-              Verify OTP
+              Verify Login OTP
             </h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              We've sent a 6-digit code to {email}
+              We've sent a 6-digit login code to {email}
             </p>
           </div>
 
@@ -122,9 +128,10 @@ export default function OtpVerify() {
 
             <button
               type="submit"
-              className="w-full bg-teal-500 hover:bg-teal-400 text-[#0A1120] font-semibold text-sm sm:text-base rounded-lg py-2.5 sm:py-3 transition-colors"
+              disabled={loading}
+              className="w-full bg-teal-500 hover:bg-teal-400 text-[#0A1120] font-semibold text-sm sm:text-base rounded-lg py-2.5 sm:py-3 transition-colors disabled:opacity-50"
             >
-              Verify
+              {loading ? "Verifying..." : "Verify & Login"}
             </button>
           </form>
 

@@ -32,7 +32,7 @@ export default function UserAuth() {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-
+  const [loading, setLoading] = useState(false);
   const handleChange = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
@@ -43,13 +43,46 @@ export default function UserAuth() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  async function Login(){
+    const url = "http://localhost:4000/api/auth/login";
+    try{
+      setLoading(true);
+      const response = await fetch(url , {
+        method:"POST",
+        headers:{"content-type":"application/json"},
+        body:JSON.stringify({
+          "email":form.email,
+          "password":form.password
+        })
+      });
+      const result = await response.json();
+    
+        if (!response.ok) {
+          
+        setErrors({ email: result.message || "Invalid email or password" });
+      return;
+        }
+    
+        navigate("/verify-login-otp", { 
+          state: { email: form.email.trim() } 
+        });
+    }catch(e){
+      console.log("There is something wrong in your side ");
+
+    }finally{
+      console.log("Request Gyi thi ");
+      setLoading(false);
+    }
+
+  }
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validate();
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      // TODO: hook up actual auth call
-      navigate("/");
+      // Route to user Login OTP verification page
+      // navigate("/verify-login-otp", { state: { email: form.email } });
+      await Login();
     }
   };
 
@@ -101,7 +134,7 @@ export default function UserAuth() {
               type="submit"
               className="w-full bg-teal-500 hover:bg-teal-400 text-[#0A1120] font-semibold text-sm sm:text-base rounded-lg py-2.5 sm:py-3 transition-colors"
             >
-              Sign In
+              {loading ? "Sending OTP..." : "Sign In"}
             </button>
           </form>
 
