@@ -1,7 +1,5 @@
-import React, { use } from 'react'
-import './GetLocation.css'
-import { useRef } from 'react';
-import { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import './GetLocation.css';
 const GetLocation = () => {
     const btn = useRef();
     const [isloading , setloading]=useState(false);

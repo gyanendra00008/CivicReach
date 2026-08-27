@@ -8,6 +8,7 @@ const { generateOtp, getOtpHtml } = require("../services/utils");
 require("dotenv").config();
 
 const isProduction = process.env.NODE_ENV === "production";
+const JWT_SECRET = process.env.JWT_SECRET || "civicreach_jwt_secret_key_2026";
 
 const cookieOptions = {
   httpOnly: true,
@@ -274,7 +275,7 @@ async function verifyLoginOtp(req, res, next) {
     // Generate refresh token
     const refreshToken = jwt.sign(
       { id: user._id, sessionId: session._id },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -285,7 +286,7 @@ async function verifyLoginOtp(req, res, next) {
     // Generate access token
     const accessToken = jwt.sign(
       { id: user._id, sessionId: session._id },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: "15m" }
     );
 
@@ -316,7 +317,7 @@ async function refreshToken(req, res, next) {
 
     let decoded;
     try {
-      decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+      decoded = jwt.verify(refreshToken, JWT_SECRET);
     } catch (error) {
       return res.status(401).json({
         message: "Invalid or expired refresh token",
@@ -345,13 +346,13 @@ async function refreshToken(req, res, next) {
 
     const accessToken = jwt.sign(
       { id: decoded.id, sessionId: decoded.sessionId },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: "15m" }
     );
 
     const newRefreshToken = jwt.sign(
       { id: decoded.id, sessionId: decoded.sessionId },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -386,7 +387,7 @@ async function getme(req, res, next) {
 
     let decoded;
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
+      decoded = jwt.verify(token, JWT_SECRET);
     } catch (err) {
       return res.status(401).json({
         message: err.name === "TokenExpiredError" ? "Token expired" : "Invalid token",
@@ -421,7 +422,7 @@ async function logout(req, res, next) {
 
     let decoded;
     try {
-      decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+      decoded = jwt.verify(refreshToken, JWT_SECRET);
     } catch (error) {
       res.clearCookie("refreshToken", cookieOptions);
       return res.status(401).json({
