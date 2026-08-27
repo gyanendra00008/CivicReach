@@ -23,6 +23,7 @@ if (hasEmailCredentials) {
       tls: {
         rejectUnauthorized: false,
       },
+      family: 4, // Force IPv4 to avoid ENETUNREACH errors on IPv6-unsupported networks like Render
       connectionTimeout: 15000,
       greetingTimeout: 10000,
       socketTimeout: 20000,
@@ -43,6 +44,7 @@ if (hasEmailCredentials) {
       tls: {
         rejectUnauthorized: false,
       },
+      family: 4, // Force IPv4 to avoid ENETUNREACH errors on IPv6-unsupported networks like Render
       connectionTimeout: 15000,
       greetingTimeout: 10000,
       socketTimeout: 20000,
