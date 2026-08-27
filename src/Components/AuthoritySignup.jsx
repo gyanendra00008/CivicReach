@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShieldCheck, User, Mail, Lock, IdCard, MapPin } from "lucide-react";
+import { ShieldCheck, User, Mail, Lock, IdCard, MapPin, Eye, EyeOff } from "lucide-react";
 import bgImage from "../assets/img3.webp";
 
-function Field({ icon, label, type, placeholder, value, onChange, error }) {
+function Field({ icon, label, type, placeholder, value, onChange, error, endAdornment }) {
   return (
     <div>
       <label className="text-sm sm:text-base font-medium text-slate-400 mb-1.5 sm:mb-2 block">{label}</label>
@@ -20,6 +20,7 @@ function Field({ icon, label, type, placeholder, value, onChange, error }) {
           placeholder={placeholder}
           className="flex-1 bg-transparent outline-none text-sm sm:text-base text-white placeholder:text-slate-600"
         />
+        {endAdornment}
       </div>
       {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
     </div>
@@ -30,6 +31,7 @@ const CATEGORIES = ["Water", "Electricity", "Roads", "Sanitation", "Health", "Ot
 
 export default function AuthoritySignup() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     fullName: "",
     officialEmail: "",
@@ -106,11 +108,20 @@ export default function AuthoritySignup() {
             <Field
               icon={<Lock size={18} />}
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="At least 8 characters"
               value={form.password}
               onChange={handleChange("password")}
               error={errors.password}
+              endAdornment={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="text-slate-500 hover:text-slate-300"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              }
             />
 
             <Field
