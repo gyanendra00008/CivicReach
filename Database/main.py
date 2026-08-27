@@ -100,6 +100,28 @@ def show_all_data():
     for doc in collection.find():
         print(doc)
 
+# to fetch image
+
+
+def get_image_url(pincode, title):
+    query = {
+        "pincode": pincode,
+        "problems.title": title
+    }
+
+    document = collection.find_one(query)
+
+    if document:
+        for problem in document.get("problems", []):
+            if problem.get("title") == title:
+                image_url = problem.get("img_url")
+
+                if image_url:
+                    return image_url
+
+                return None
+
+    return None
 
 if __name__ == "__main__":
     add_problem(500003 , "Road Khrab h ", "Road","This is problem description " ,"http://kuchhkuchh.com","gk154866@gmail.com")
