@@ -11,11 +11,11 @@ let transporter = null;
 if (hasEmailCredentials) {
   let transportConfig;
   if (process.env.EMAIL_PASS) {
-    // Standard Google App Password authentication using Port 465 SSL
+    // Standard Google App Password authentication using Port 587 STARTTLS
     transportConfig = {
       host: process.env.EMAIL_HOST || "smtp.gmail.com",
-      port: parseInt(process.env.EMAIL_PORT, 10) || 465,
-      secure: process.env.EMAIL_SECURE ? process.env.EMAIL_SECURE === "true" : true,
+      port: parseInt(process.env.EMAIL_PORT, 10) || 587,
+      secure: process.env.EMAIL_SECURE ? process.env.EMAIL_SECURE === "true" : false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -32,8 +32,8 @@ if (hasEmailCredentials) {
     // Google OAuth2 authentication
     transportConfig = {
       host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+      port: 587,
+      secure: false,
       auth: {
         type: "OAuth2",
         user: process.env.EMAIL_USER,
