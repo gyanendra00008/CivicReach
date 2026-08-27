@@ -32,7 +32,6 @@ export default function UserSignup() {
   const [form, setForm] = useState({
     fullName: "",
     email: "",
-    phone: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
@@ -44,7 +43,7 @@ export default function UserSignup() {
     const newErrors = {};
     if (!form.fullName.trim()) newErrors.fullName = "Full name is required";
     if (!form.email.trim()) newErrors.email = "Email is required";
-    if (!form.phone.trim()) newErrors.phone = "Phone number is required";
+    // if (!form.phone.trim()) newErrors.phone = "Phone number is required";
     if (!form.password.trim() || form.password.length < 8)
       newErrors.password = "Password must be at least 8 characters";
     if (!agreed) newErrors.agreed = "Please accept the terms to continue";
@@ -138,7 +137,7 @@ export default function UserSignup() {
               error={errors.email}
             />
 
-            <Field
+            {/* <Field
               icon={<Phone size={18} />}
               label="Phone number"
               type="tel"
@@ -146,7 +145,7 @@ export default function UserSignup() {
               value={form.phone}
               onChange={handleChange("phone")}
               error={errors.phone}
-            />
+            /> */}
 
             <Field
               icon={<Lock size={18} />}
@@ -166,7 +165,7 @@ export default function UserSignup() {
                   onChange={(e) => setAgreed(e.target.checked)}
                   className="mt-0.5"
                 />
-                Main terms aur privacy policy se agree karta/karti hu
+                i am agree with Your privacy policies
               </label>
               {errors.agreed && (
                 <p className="text-xs text-red-400 mt-1">{errors.agreed}</p>

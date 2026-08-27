@@ -10,6 +10,7 @@ export default function LoginOtpVerify() {
 
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const inputRefs = useRef([]);
 
   const handleChange = (index, e) => {
@@ -32,15 +33,53 @@ export default function LoginOtpVerify() {
     }
   };
 
-  const handleSubmit = (e) => {
+  async function LoginOtpVerification(otpCode) {
+    const url = "http://localhost:4000/api/auth/verify-login";
+    try {
+      setLoading(true);
+      setError("");
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          otp: otpCode,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.message || "Invalid or expired OTP");
+        return;
+      }
+
+      // Store tokens / user info if provided
+      if (result.accessToken) {
+        localStorage.setItem("accessToken", result.accessToken);
+      }
+      if (result.user) {
+        localStorage.setItem("user", JSON.stringify(result.user));
+      }
+
+      // Route to User Dashboard on successful verification
+      navigate("/user-dashboard", { state: { email, user: result.user } });
+    } catch (e) {
+      console.error("Error verifying login OTP:", e);
+      setError("Server unreachable. Please make sure backend is running.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const code = otp.join("");
     if (code.length < 6) {
       setError("Please enter the full 6-digit OTP");
       return;
     }
-    // Login OTP verified -> Route to User Dashboard
-    navigate("/user-dashboard", { state: { email } });
+    await LoginOtpVerification(code);
   };
 
   const handleResend = () => {
@@ -89,9 +128,10 @@ export default function LoginOtpVerify() {
 
             <button
               type="submit"
-              className="w-full bg-teal-500 hover:bg-teal-400 text-[#0A1120] font-semibold text-sm sm:text-base rounded-lg py-2.5 sm:py-3 transition-colors"
+              disabled={loading}
+              className="w-full bg-teal-500 hover:bg-teal-400 text-[#0A1120] font-semibold text-sm sm:text-base rounded-lg py-2.5 sm:py-3 transition-colors disabled:opacity-50"
             >
-              Verify & Login
+              {loading ? "Verifying..." : "Verify & Login"}
             </button>
           </form>
 

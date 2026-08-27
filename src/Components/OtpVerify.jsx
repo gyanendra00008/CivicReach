@@ -12,19 +12,24 @@ export default function OtpVerify() {
   const [error, setError] = useState("");
   const inputRefs = useRef([]);
 
-  const handleChange = (index, e) => {
-    const value = e.target.value.replace(/[^0-9]/g, "");
-    if (!value) {
+  const handleChange = async (index, e) => {
+      const value = e.target.value.replace(/[^0-9]/g, "");
+      
       const newOtp = [...otp];
-      newOtp[index] = "";
+      newOtp[index] = value ? value[value.length - 1] : "";
       setOtp(newOtp);
-      return;
-    }
-    const newOtp = [...otp];
-    newOtp[index] = value[value.length - 1];
-    setOtp(newOtp);
-    if (index < 5) inputRefs.current[index + 1]?.focus();
-  };
+    
+      // Next input par focus bhejna
+      if (value && index < 5) {
+        inputRefs.current[index + 1]?.focus();
+      }
+    
+      
+      const completeOtp = newOtp.join("");
+      if (completeOtp.length === 6) {
+        await RegisterOtpvirification(completeOtp);
+      }
+    };
 
   const handleKeyDown = (index, e) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
@@ -32,7 +37,34 @@ export default function OtpVerify() {
     }
   };
 
-  const handleSubmit = (e) => {
+  async function RegisterOtpvirification(otp){
+    const url = "http://localhost:4000/api/auth/verify-email";
+
+    try{
+      const response = await fetch(url , {
+        method:"POST",
+        headers:{"content-type":"application/json"},
+        body:JSON.stringify({
+          "email":email,
+          "otp":otp,
+        }),
+      });
+      const result = await response.json();
+    
+        if (!response.ok) {
+          setError(result.message || "Invalid or expired OTP");
+          return;
+        }
+    
+        // OTP Verify hone ke baad User ko Login page par bhejna
+        navigate("/login");
+    }catch(e){
+      console.log("There is Any error in Reg Otp");
+    }finally{
+      console.log("Request Gyi thi ek baar ");
+    }
+  }
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const code = otp.join("");
     if (code.length < 6) {
@@ -40,7 +72,7 @@ export default function OtpVerify() {
       return;
     }
     // OTP verified -> Route to Login page
-    navigate("/login");
+   await RegisterOtpvirification(code);
   };
 
   const handleResend = () => {
