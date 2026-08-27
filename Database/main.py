@@ -92,6 +92,15 @@ def delete_entry(pincode, title):
         print(f" Koi matching problem nahi mili (Pincode: {pincode}, Title: '{title}')")
 
 
+def show_all_data():
+    """
+    Saara Data Print karna
+    """
+    print("\n--- [All Documents in Collection] ---")
+    for doc in collection.find():
+        print(doc)
+
+
 if __name__ == "__main__":
     add_problem(500003 , "Road Khrab h ", "Road","This is problem description " ,"http://kuchhkuchh.com","gk154866@gmail.com")
     add_problem(500003 , "Road Khrab h ", "police","This is problem description " ,"http://kuchhkuchh.com","gk154866@gmail.com")

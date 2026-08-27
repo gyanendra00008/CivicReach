@@ -7,9 +7,12 @@ import Reveal from "./Reveal";
  import Authorities from "./Authorities";
  import Contact from "./Contact";
  import About from "./About";
+ import Logo from "./Logo";
+ import {useNavigate} from "react-router-dom";
 
 
 const HomePage = () => {
+  const navigate = useNavigate();
   return (
     <div
       className="min-h-screen w-full bg-cover bg-center relative text-white font-sans overflow-x-hidden"
@@ -25,13 +28,7 @@ const HomePage = () => {
         {/* Floating Navigation Bar */}
         <nav className="mt-10 w-[98%] mx-auto ml-4xl flex items-center justify-between px-10 py-8 bg-[#0a1628]/90 border border-teal-500/30 rounded-2xl backdrop-blur-xl" style={{minHeight: '80px'}}>
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-teal-400/20 flex items-center justify-center text-teal-300 border border-teal-400/30 text-xs font-bold">
-              📍
-            </div>
-            <h1 className="text-lg font-bold tracking-tight text-white">CivicRoute</h1>
-          </div>
-
+         <Logo />
           {/* Navigation Links */}
          <div className="hidden md:flex items-center gap-8 text-base text-gray-300">
   <a href="#home" className="text-white border-b-2 border-teal-400 pb-1 text-[18px] font-semibold">Home</a>
@@ -43,11 +40,11 @@ const HomePage = () => {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-4">
-            <button className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
+            <button onClick={() => navigate( '/complaints')}className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
               Track Complaint
             </button>
-            <button className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
-              Report Issue
+            <button onClick={() => navigate('/complaints/new')}className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
+              New Complaint
             </button>
           </div>
         </nav>
@@ -85,8 +82,8 @@ const HomePage = () => {
 </div>
           {/* Left Text Content */}
           
-          <div className=" max-w-3xl mx-auto text-center flex flex-col items-center translate-x-16 lg:translate-x-24 ">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.12] tracking-tight mb-6 text-white">
+          <div className=" max-w-3xl mx-auto text-center flex flex-col items-center  translate-x-0 lg:translate-x-2 translate-y-10 lg:-translate-y-14">
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold leading-[1.12] tracking-tight mb-6 text-white">
               Every <br />
               complaint, <br />
               <span className="text-teal-400">routed to the <br />right desk.</span>
@@ -98,13 +95,14 @@ const HomePage = () => {
 
             {/* CTA Buttons */}
               {/* CTA Buttons */}
-  <div className="flex flex-wrap items-center justify-center gap-4 mt-2 z-20 relative leading-relaxed">
-    <button className="bg-[#2CF6B3] hover:bg-[#1de5a2] text-black font-bold text-lg px-15 py-30 rounded-md shadow-[0_0_20px_rgba(45,246,179,0.3)] transition-all">
-      User Login
-    </button>
-     <button className="bg-[#2CF6B3] hover:bg-[#1de5a2] text-black font-bold text-lg px-15 py-30 rounded-md shadow-[0_0_20px_rgba(45,246,179,0.3)] transition-all">
-      Authority Login
-    </button>
+   {/* CTA Buttons */}
+            <div className="flex flex-wrap items-center justify-start gap-4 mt-2 z-20 relative">
+              <button onClick={() => navigate('/login')} className="bg-teal-400 hover:bg-teal-300 text-black font-bold text-xl px-8 py-3.5 rounded-md shadow-lg hover:shadow-teal-400/50 transition-all duration-300">
+                ✉️ User Login
+              </button>
+              <button onClick={() => navigate( '/authority')}className="border border-gray-400 text-white text-xl px-8 py-3.5 rounded-md hover:bg-white/10 transition-all duration-300">
+                🛡️ Authority Login
+              </button>
   </div>
           </div>
           {/* Middle Spark / Glowing Particles - jo tumne circle kiya hai */}
@@ -123,21 +121,112 @@ const HomePage = () => {
           <div className="flex-1 w-full max-w-lg flex items-center justify-center relative">
             <div className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 flex items-center justify-center">
               
-              {/* Animated Radar Concentric Circles */}
-              <div className="absolute inset-0 rounded-full border border-teal-500/20 animate-pulse"></div>
-              <div className="absolute inset-8 rounded-full border border-teal-400/25"></div>
-              <div className="absolute inset-16 rounded-full border border-teal-400/40 border-dashed animate-[spin_60s_linear_infinite]"></div>
-              <div className="absolute inset-28 rounded-full border border-teal-300/30"></div>
+              {/* Bada Radar Circle - Photo jaisa */}
+<div className="absolute right-[5%] top-1/2 -translate-y-1/2 hidden lg:block">
+  <div className="relative w-[600px] h-[600px] flex items-center justify-center">
 
-              {/* Glowing Map Pin Icon */}
-              <div className="relative z-10 flex flex-col items-center">
-                <div className="relative">
-                  <div className="absolute -inset-10 bg-teal-400/3 rounded-full blur-[40px] animate-pulse"></div>
-                  <div className="w-16 h-16 bg-gradient-to-tr from-teal-500 to-emerald-300 text-slate-950 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(45,212,191,0.8)] relative z-10 border-2 border-white/40">
-                    <span className="text-3xl">📍</span>
-                  </div>
-                </div>
-              </div>
+    {/* 8 bade circles - ek ke andar ek */}
+    <div className="absolute w-[580px] h-[580px] rounded-full border border-white/[0.06]"></div>
+    <div className="absolute w-[520px] h-[520px] rounded-full border border-cyan-300/10"></div>
+    <div className="absolute w-[460px] h-[460px] rounded-full border border-cyan-300/15"></div>
+    <div className="absolute w-[400px] h-[400px] rounded-full border border-cyan-300/15"></div>
+    <div className="absolute w-[340px] h-[340px] rounded-full border border-cyan-300/15"></div>
+    <div className="absolute w-[280px] h-[280px] rounded-full border border-cyan-300/20 bg-cyan-500/[0.04]"></div>
+    <div className="absolute w-[220px] h-[220px] rounded-full border border-cyan-300/25 shadow-[0_0_60px_rgba(34,211,238,0.15)]"></div>
+    <div className="absolute w-[140px] h-[140px] rounded-full border border-cyan-300/30 shadow-[0_0_40px_rgba(34,211,238,0.2)]"></div>
+
+    
+  
+
+  </div>
+</div>
+{/* FINAL HERO - Dim Circles + Rotating Dots + 3 Issue Boxes */}
+<div className="absolute right-[2%] top-1/2 -translate-y-1/2 hidden lg:block">
+  <div className="relative w-[650px] h-[650px] flex items-center justify-center">
+
+    {/* 1. Dim Base Circles */}
+    <div className="absolute w-[600px] h-[600px] rounded-full border border-white/[0.04]"></div>
+    <div className="absolute w-[540px] h-[540px] rounded-full border border-cyan-300/[0.06]"></div>
+    <div className="absolute w-[480px] h-[480px] rounded-full border border-cyan-300/10"></div>
+    <div className="absolute w-[400px] h-[400px] rounded-full border border-cyan-300/10"></div>
+    <div className="absolute w-[320px] h-[320px] rounded-full border border-cyan-300/10"></div>
+
+    {/* 2. Center Cyan Glow Background */}
+    <div className="absolute w-[400px] h-[400px] bg-cyan-500/[0.07] rounded-full blur-[40px]"></div>
+
+    {/* 3. Rotating White Dots - Circle ko highlight karenge */}
+    {/* Outer Circle Dots */}
+    <div className="absolute w-[540px] h-[540px] rounded-full animate-[spin_10s_linear_infinite]">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_12px_white]"></div>
+      <div className="absolute bottom-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-cyan-200 rounded-full shadow-[0_0_8px_#a5f3fc]"></div>
+    </div>
+    {/* Middle Circle Dots */}
+    <div className="absolute w-[400px] h-[400px] rounded-full animate-[spin_7s_linear_infinite_reverse]">
+      <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full shadow-[0_0_15px_white]"></div>
+    </div>
+    {/* Inner Circle Dots */}
+    <div className="absolute w-[320px] h-[320px] rounded-full animate-[spin_12s_linear_infinite]">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_10px_white]"></div>
+    </div>
+
+    
+
+    {/* 5. Center Pin - Bilkul centre me lock */}
+    <div className="relative z-20 flex items-center justify-center">
+      <div className="absolute w-24 h-24 bg-cyan-400/20 rounded-full blur-[12px] animate-pulse"></div>
+      <div className="relative w-16 h-16 bg-[#5efcf7] rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(94,252,247,0.6)]">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
+        </svg>
+      </div>
+    </div>
+
+    {/* 6. 3 COMPLAINT BOXES - Connected to circles */}
+    {/* Box 1 - Top Right - Pothole */}
+    <div className="absolute top-[8%] right-[5%] z-30">
+      <div className="bg-[#111a2f]/80 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-3 w-[210px] shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+        <div className="flex items-center gap-2.5">
+          <span className="w-7 h-7 rounded-lg bg-orange-500/20 flex items-center justify-center text-[14px]">⚠️</span>
+          <div>
+            <p className="text-white text-[13px] font-semibold leading-none">Pothole</p>
+            <p className="text-slate-400 text-[11px] mt-1">Reported 12m ago</p>
+          </div>
+        </div>
+        <p className="text-orange-400 text-[11px] mt-2 font-medium">• In Progress</p>
+      </div>
+    </div>
+
+    {/* Box 2 - Middle Left - Sanitation */}
+    <div className="absolute top-[52%] left-[-8%] z-30">
+      <div className="bg-[#111a2f]/80 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-3 w-[210px] shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+        <div className="flex items-center gap-2.5">
+          <span className="w-7 h-7 rounded-lg bg-yellow-500/20 flex items-center justify-center text-[14px]">🚮</span>
+          <div>
+            <p className="text-white text-[13px] font-semibold leading-none">Sanitation</p>
+            <p className="text-slate-400 text-[11px] mt-1">Reported 30m ago</p>
+          </div>
+        </div>
+        <p className="text-yellow-400 text-[11px] mt-2 font-medium">• Pending</p>
+      </div>
+    </div>
+
+    {/* Box 3 - Bottom Right - Water Leakage */}
+    <div className="absolute bottom-[8%] right-[2%] z-30">
+      <div className="bg-[#111a2f]/80 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-3 w-[210px] shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+        <div className="flex items-center gap-2.5">
+          <span className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center text-[14px]">💧</span>
+          <div>
+            <p className="text-white text-[13px] font-semibold leading-none">Water Leakage</p>
+            <p className="text-slate-400 text-[11px] mt-1">Reported 1h ago</p>
+          </div>
+        </div>
+        <p className="text-blue-400 text-[11px] mt-2 font-medium">• Assigned</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+             
 
               {/* Glowing Signal Nodes */}
               <div className="absolute top-1/4 left-1/4 w-2.5 h-2.5 bg-teal-400 rounded-full shadow-[0_0_10px_#22d3ee]"></div>
