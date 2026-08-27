@@ -51,47 +51,52 @@ export default function UserSignup() {
     return newErrors;
   };
 
-  const handleSubmit =async (e) => {
+  const [apiError, setApiError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setApiError("");
     const newErrors = validate();
     setErrors(newErrors);
     if (Object.keys(newErrors).length !== 0) {
-    return;
-  }
-  await Register();
+      return;
+    }
+    await Register();
   };
-  async function Register(){
 
-    const username = form.fullName;
-    const email = form.email;
+  async function Register() {
+    const username = form.fullName.trim();
+    const email = form.email.trim();
     const password = form.password;
 
-    if(username=="" || email==""|| password=="")console.log("shi se fill kro");
-    try{
+    try {
+      setLoading(true);
+      setApiError("");
       const url = "http://localhost:4000/api/auth/register";
-      const response = await fetch(url , {
-        method:"POST",
-        headers:{"content-type":"application/json"},
-        body:JSON.stringify({
-          "username":username,
-          "email":email,
-          "password":password
-        })});
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+        }),
+      });
 
       const result = await response.json();
 
-      if(!response.ok)console.log("kuchh gdbd ho gyi h");
-      else console.log(result);
-
-    }catch(e){
-      console.log(e);
-    }finally{
-      console.log("Request gyi thi")
+      if (!response.ok) {
+        setApiError(result.message || "Failed to register. Please try again.");
+      } else {
+        navigate("/verify-otp", { state: { email: email } });
+      }
+    } catch (e) {
+      console.error(e);
+      setApiError("Server is unreachable. Please make sure the backend is running.");
+    } finally {
+      setLoading(false);
     }
-
-
-
-
   }
   return (
     <div
@@ -108,7 +113,7 @@ export default function UserSignup() {
             </div>
             <h1 className="text-xl sm:text-2xl font-semibold text-white">Create your account</h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Complaint darj karne ke liye account banao
+              Please Register Before Complaint
             </p>
           </div>
 

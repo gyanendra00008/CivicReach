@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
 import bgImage from "../assets/img3.webp";
 
-export default function OtpVerify() {
+export default function LoginOtpVerify() {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email || "your registered email";
@@ -39,12 +39,11 @@ export default function OtpVerify() {
       setError("Please enter the full 6-digit OTP");
       return;
     }
-    // OTP verified -> Route to Login page
-    navigate("/login");
+    // Login OTP verified -> Route to User Dashboard
+    navigate("/user-dashboard", { state: { email } });
   };
 
   const handleResend = () => {
-    // TODO: hook up actual resend OTP API call
     setError("");
   };
 
@@ -62,10 +61,10 @@ export default function OtpVerify() {
               <ShieldCheck size={22} className="text-teal-400" />
             </div>
             <h1 className="text-xl sm:text-2xl font-semibold text-white">
-              Verify OTP
+              Verify Login OTP
             </h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              We've sent a 6-digit code to {email}
+              We've sent a 6-digit login code to {email}
             </p>
           </div>
 
@@ -92,7 +91,7 @@ export default function OtpVerify() {
               type="submit"
               className="w-full bg-teal-500 hover:bg-teal-400 text-[#0A1120] font-semibold text-sm sm:text-base rounded-lg py-2.5 sm:py-3 transition-colors"
             >
-              Verify
+              Verify & Login
             </button>
           </form>
 

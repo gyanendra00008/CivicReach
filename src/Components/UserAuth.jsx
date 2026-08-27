@@ -48,8 +48,8 @@ export default function UserAuth() {
     const newErrors = validate();
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      // TODO: hook up actual auth call
-      navigate("/");
+      // Route to user Login OTP verification page
+      navigate("/verify-login-otp", { state: { email: form.email } });
     }
   };
 

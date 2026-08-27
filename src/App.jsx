@@ -8,6 +8,7 @@ import ComplaintPage from "./Components/ComplaintPage";
 import UploadPage from "./Components/UploadPage";
 import ComplaintSuccess from "./Components/ComplaintSuccess";
 import OtpVerify from "./Components/OtpVerify";
+import LoginOtpVerify from "./Components/LoginOtpVerify";
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
         <Route path="/signup" element={<UserSignup />} />
         <Route path="/authority-signup" element={<AuthoritySignup />} />
         <Route path="/verify-otp" element={<OtpVerify />} />
+        <Route path="/verify-login-otp" element={<LoginOtpVerify />} />
+        <Route path="/user-dashboard" element={<ComplaintPage />} />
+        <Route path="/dashboard" element={<ComplaintPage />} />
         <Route path="/complaints" element={<ComplaintPage />} />
         <Route path="/complaints/new" element={<UploadPage />} />
         <Route path="/complaints/success" element={<ComplaintSuccess />} />
