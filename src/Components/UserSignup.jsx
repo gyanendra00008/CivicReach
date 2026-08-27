@@ -172,11 +172,16 @@ export default function UserSignup() {
               )}
             </div>
 
+            {apiError && (
+              <p className="text-xs text-red-400 text-center">{apiError}</p>
+            )}
+
             <button
               type="submit"
-              className="w-full bg-teal-500 hover:bg-teal-400 text-[#0A1120] font-semibold text-sm sm:text-base rounded-lg py-2.5 sm:py-3 transition-colors"
+              disabled={loading}
+              className="w-full bg-teal-500 hover:bg-teal-400 text-[#0A1120] font-semibold text-sm sm:text-base rounded-lg py-2.5 sm:py-3 transition-colors disabled:opacity-50"
             >
-              Create account
+              {loading ? "Creating account..." : "Create account"}
             </button>
           </form>
 
