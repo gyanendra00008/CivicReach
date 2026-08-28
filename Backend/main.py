@@ -66,40 +66,87 @@ class ProblemStatusUpdate(BaseModel):
 
 # Geolocation helper
 def get_location_details(lat: float, lon: float):
-    url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=json"
+    """
+    Reverse Geocoding using OpenStreetMap Nominatim API with complete address parsing.
+    Accurately resolves District, State, City, Postcode, and Formatted Address across India.
+    """
+    url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=json&addressdetails=1"
     headers = {"User-Agent": "CivicReach_GeoApp/1.0 (contact@civicreach.app)"}
     try:
         response = requests.get(url, headers=headers, timeout=10)
         if response.status_code == 200:
             data = response.json()
             if "address" in data:
-                state = data["address"].get("state", "State not found")
-                district = data["address"].get(
-                    "state_district",
-                    data["address"].get("city", data["address"].get("county", "District not found")),
+                addr = data["address"]
+                state = addr.get("state") or addr.get("state_code") or "Unknown State"
+                district = (
+                    addr.get("state_district")
+                    or addr.get("district")
+                    or addr.get("county")
+                    or addr.get("city_district")
+                    or addr.get("city")
+                    or addr.get("town")
+                    or addr.get("suburb")
+                    or "Unknown District"
                 )
-                pincode = data["address"].get("postcode", "postcode not found")
-                return [district, state, pincode]
+                city = (
+                    addr.get("city")
+                    or addr.get("town")
+                    or addr.get("village")
+                    or addr.get("suburb")
+                    or addr.get("neighbourhood")
+                    or district
+                )
+                raw_pincode = addr.get("postcode") or addr.get("postal_code") or "postcode not found"
+                if raw_pincode != "postcode not found":
+                    pincode = str(raw_pincode).split(",")[0].strip().replace(" ", "")
+                else:
+                    pincode = "postcode not found"
+
+                display_name = data.get("display_name", "")
+
+                return {
+                    "district": district,
+                    "state": state,
+                    "city": city,
+                    "pincode": pincode,
+                    "formatted_address": display_name,
+                }
     except Exception as e:
         print("Geocoding error:", e)
+    return None
+
+
+# Legacy helper returning list for backward compatibility
+def getlocation(lat: float, lon: float):
+    res = get_location_details(lat, lon)
+    if res:
+        return [res["district"], res["state"], res["pincode"]]
     return []
 
 
 @app.get("/")
 def health_check():
-    return {"status": "ok", "service": "CivicReach FastAPI Backend"}
+    return {"status": "ok", "service": "CivicReach FastAPI Backend (Unified)", "version": "1.1.0"}
 
 
-# 1. Reverse Geocoding Route
+# 1. Reverse Geocoding Route (Supports both /Location/{lan}/{lon} and /Location/{lat}/{lon})
+@app.get("/Location/{lat}/{lon}")
 @app.get("/Location/{lan}/{lon}")
-def convert_coordinates(lan: float, lon: float):
-    user_location = get_location_details(lan, lon)
+def convert_coordinates(lat: Optional[float] = None, lan: Optional[float] = None, lon: float = 0.0):
+    actual_lat = lat if lat is not None else lan
+    if actual_lat is None:
+        raise HTTPException(status_code=400, detail="Latitude is required")
+
+    user_location = get_location_details(actual_lat, lon)
     if user_location:
         return {
             "status": "success",
-            "district": user_location[0],
-            "state": user_location[1],
-            "pincode": user_location[2],
+            "district": user_location["district"],
+            "state": user_location["state"],
+            "city": user_location["city"],
+            "pincode": user_location["pincode"],
+            "formatted_address": user_location["formatted_address"],
         }
     return {"status": "error", "message": "Could not determine location"}
 

@@ -37,7 +37,32 @@ Sabhi configurations Render aur Vercel ke liye set kar di gayi hain. Niche diye 
 
 ---
 
-## 2️⃣ Part B: Deploy Frontend on Vercel
+## 2️⃣ Part B: Deploy FastAPI Backend (Python) on Render
+
+1. Render Dashboard par **New +** -> **Web Service** par click karein.
+2. Repository `CivicReach` select karein.
+3. Settings:
+   - **Name**: `civicreach-fastapi`
+   - **Region**: Singapore (ya nearest)
+   - **Branch**: `main`
+   - **Root Directory**: `Backend` *(Zaroori)*
+   - **Runtime**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+   - **Instance Type**: `Free`
+
+4. **Environment Variables**:
+   | Key | Value | Description |
+   |-----|-------|-------------|
+   | `MONGO_URI` | `mongodb+srv://<user>:<password>@<cluster>.mongodb.net/?retryWrites=true&w=majority` | MongoDB Atlas URI |
+
+5. Click **Deploy Web Service**. Deploy hone par URL mil jayega (Jaise `https://civicreach-fastapi.onrender.com`).
+   - Health check: `https://civicreach-fastapi.onrender.com/`
+   - Swagger Docs: `https://civicreach-fastapi.onrender.com/docs`
+
+---
+
+## 3️⃣ Part C: Deploy Frontend on Vercel
 
 1. Open [Vercel Dashboard](https://vercel.com/dashboard) aur **Add New...** -> **Project** par click karein.
 2. Apna GitHub repository `CivicReach` import karein.
@@ -50,14 +75,16 @@ Sabhi configurations Render aur Vercel ke liye set kar di gayi hain. Niche diye 
 4. **Environment Variables** (Vercel project settings me add karein):
    | Key | Value |
    |-----|-------|
-   | `VITE_AUTH_API_URL` | Render backend ka URL (Jaise `https://civicreach-backend.onrender.com`) |
+   | `VITE_AUTH_API_URL` | Render Auth backend URL (Jaise `https://civicreach-backend.onrender.com`) |
+   | `VITE_FASTAPI_URL` | Render FastAPI backend URL (Jaise `https://civicreach-fastapi.onrender.com`) |
 
 5. Click **Deploy**.
 6. Deployment complete hone ke baad Vercel aapka live link dega (Jaise `https://civicreach.vercel.app`).
 
 ---
 
-## 3️⃣ Part C: Final Link-up
+## 4️⃣ Part D: Final Link-up
 
 1. Render Dashboard me jayein -> apne Web Service ke **Environment** tab me `CLIENT_URL` me Vercel ka actual URL daal dein (`https://civicreach.vercel.app`).
-2. Done! Frontend aur Backend successfully connected hain! 🎉
+2. Done! Sabhi services successfully connected hain! 🎉
+
