@@ -2,10 +2,11 @@ const { Resend } = require("resend");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const rawResendKey = process.env.RESEND_API_KEY || process.env.RESEND_KEY || "";
+const RESEND_API_KEY = rawResendKey.replace(/^["']|["']$/g, "").trim();
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
-// Gmail / SMTP fallback config
+// Gmail / SMTP fallback config (only enabled if Resend is NOT provided)
 const hasSmtpCredentials = Boolean(
   (process.env.EMAIL_USER && process.env.EMAIL_PASS) ||
   (process.env.EMAIL_USER && process.env.GOOGLE_REFRESH_TOKEN)
