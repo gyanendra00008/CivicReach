@@ -4,7 +4,9 @@ const rawAuthUrl =
 export const AUTH_API_URL = rawAuthUrl.replace(/\/+$/, "");
 
 const rawFastApiUrl =
-  import.meta.env.VITE_FASTAPI_API_URL || "http://127.0.0.1:8000";
+  import.meta.env.VITE_FASTAPI_API_URL ||
+  "https://backend-and-database.onrender.com";
 
 export const FASTAPI_API_URL = rawFastApiUrl.replace(/\/+$/, "");
+
 
