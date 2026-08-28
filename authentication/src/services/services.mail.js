@@ -81,7 +81,10 @@ const sendEmail = async (to, subject, text, html) => {
   // 1. Try Resend if configured
   if (resend) {
     try {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || "CivicReach <onboarding@resend.dev>";
+      let fromEmail = (process.env.RESEND_FROM_EMAIL || "CivicReach <onboarding@resend.dev>").trim();
+      if (!fromEmail.includes("@")) {
+        fromEmail = "CivicReach <onboarding@resend.dev>";
+      }
       const { data, error } = await resend.emails.send({
         from: fromEmail,
         to: [to],
