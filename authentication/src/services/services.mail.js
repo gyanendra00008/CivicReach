@@ -1,36 +1,36 @@
+const { Resend } = require("resend");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
-const hasEmailCredentials = Boolean(
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
+
+// Gmail / SMTP fallback config
+const hasSmtpCredentials = Boolean(
   (process.env.EMAIL_USER && process.env.EMAIL_PASS) ||
   (process.env.EMAIL_USER && process.env.GOOGLE_REFRESH_TOKEN)
 );
 
 let transporter = null;
-
-if (hasEmailCredentials) {
+if (!resend && hasSmtpCredentials) {
   let transportConfig;
   if (process.env.EMAIL_PASS) {
-    // Standard Google App Password authentication using Port 587 STARTTLS
     transportConfig = {
-      host: "smtp.gmail.com",
-      port: 587,
-      secure:  false,
+      service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-      family: 4, // Force IPv4 to avoid ENETUNREACH errors on IPv6-unsupported networks like Render
-      connectionTimeout: 15000,
-      greetingTimeout: 10000,
-      socketTimeout: 20000,
+      tls: {
+        rejectUnauthorized: false,
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 8000,
+      socketTimeout: 15000,
     };
   } else {
-    // Google OAuth2 authentication
     transportConfig = {
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
+      service: "gmail",
       auth: {
         type: "OAuth2",
         user: process.env.EMAIL_USER,
@@ -41,58 +41,87 @@ if (hasEmailCredentials) {
       tls: {
         rejectUnauthorized: false,
       },
-      family: 4, // Force IPv4 to avoid ENETUNREACH errors on IPv6-unsupported networks like Render
-      connectionTimeout: 15000,
-      greetingTimeout: 10000,
-      socketTimeout: 20000,
+      connectionTimeout: 10000,
+      greetingTimeout: 8000,
+      socketTimeout: 15000,
     };
   }
-
-  console.log("SMTP CONFIG:", {
-  host: transportConfig.host,
-  port: transportConfig.port,
-  secure: transportConfig.secure,
-  family: transportConfig.family,
-});
 
   transporter = nodemailer.createTransport(transportConfig);
 
   if (process.env.NODE_ENV !== "test") {
     transporter.verify((error) => {
       if (error) {
-        console.warn("⚠️  Email Service Warning:", error.message);
-        console.warn("   (If OTP emails fail, verify your Gmail App Password with EMAIL_PASS in Render/env)");
+        console.warn("⚠️  [EMAIL SERVICE WARNING]:", error.message);
       } else {
-        console.log("Email server is ready to send messages");
+        console.log("✅ [EMAIL SERVICE] Gmail transporter is ready");
       }
     });
   }
+}
+
+if (resend) {
+  console.log("✅ [EMAIL SERVICE] Using Resend API for email delivery");
+} else if (transporter) {
+  console.log("ℹ️  [EMAIL SERVICE] Using Gmail SMTP (Nodemailer) for email delivery");
 } else {
-  console.log("⚠️  EMAIL_USER or EMAIL_PASS not set in environment. Running in fallback mode (OTPs are logged in server console, fallback 123456 accepted).");
+  console.log("⚠️  [EMAIL SERVICE] No email credentials configured (RESEND_API_KEY or EMAIL_USER/EMAIL_PASS). Running in console log fallback mode.");
 }
 
 const sendEmail = async (to, subject, text, html) => {
-  if (!transporter) {
-    console.log(`[AUTH DEMO/DEV MODE] Email to ${to}: ${subject} -> ${text}`);
-    return { messageId: "dev-mock-email-id" };
+  // Always log OTP visibly in server console for easy testing/debugging
+  console.log("\n=======================================================");
+  console.log(`📧 [EMAIL / OTP NOTIFICATION]`);
+  console.log(`   To: ${to}`);
+  console.log(`   Subject: ${subject}`);
+  console.log(`   Content: ${text}`);
+  console.log("=======================================================\n");
+
+  // 1. Try Resend if configured
+  if (resend) {
+    try {
+      const fromEmail = process.env.RESEND_FROM_EMAIL || "CivicReach <onboarding@resend.dev>";
+      const { data, error } = await resend.emails.send({
+        from: fromEmail,
+        to: [to],
+        subject: subject,
+        text: text,
+        html: html,
+      });
+
+      if (error) {
+        console.error("❌ Resend API Error:", error.message || error);
+        return { success: false, error: error.message || error };
+      }
+
+      console.log("✅ Email sent successfully via Resend to %s (ID: %s)", to, data?.id);
+      return { success: true, messageId: data?.id };
+    } catch (err) {
+      console.error("❌ Error sending email via Resend to", to, ":", err.message);
+      return { success: false, error: err.message };
+    }
   }
 
-  try {
-    const info = await transporter.sendMail({
-      from: `"Civic Reach" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      text,
-      html,
-    });
-
-    console.log("Email sent successfully: %s", info.messageId);
-    return info;
-  } catch (error) {
-    console.error("Error sending email to", to, ":", error.message);
-    console.warn("[AUTH FALLBACK] Email sending failed, continuing authentication flow.");
-    return { messageId: "fallback-email-failed" };
+  // 2. Try Nodemailer if configured
+  if (transporter) {
+    try {
+      const info = await transporter.sendMail({
+        from: `"Civic Reach" <${process.env.EMAIL_USER}>`,
+        to,
+        subject,
+        text,
+        html,
+      });
+      console.log("✅ Email sent successfully via Nodemailer to %s (ID: %s)", to, info.messageId);
+      return { success: true, messageId: info.messageId };
+    } catch (err) {
+      console.error("❌ Error sending email via Nodemailer to", to, ":", err.message);
+      return { success: false, error: err.message };
+    }
   }
+
+  // 3. Dev / Fallback mode
+  return { success: true, messageId: "dev-console-mode" };
 };
 
 module.exports = { sendEmail };
