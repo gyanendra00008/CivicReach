@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, ShieldCheck, MapPin, Tag } from "lucide-react";
 import bgImage from "../assets/img3.webp";
+import { AUTH_API_URL } from "../config";
 
 const CATEGORIES = [
   "All Categories",
@@ -42,6 +43,7 @@ function Field({ icon, label, type, placeholder, value, onChange, error, endAdor
 export default function AuthorityAuth() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -57,24 +59,60 @@ export default function AuthorityAuth() {
     const newErrors = {};
     if (!form.email.trim()) newErrors.email = "Official Email is required";
     if (!form.password.trim()) newErrors.password = "Password is required";
+    if (!form.district.trim()) newErrors.district = "District Jurisdiction is required";
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleAuthorityLogin = async () => {
+    const url = `${AUTH_API_URL}/api/auth/login`;
+    try {
+      setLoading(true);
+      setErrors({});
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email.trim(),
+          password: form.password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setErrors({ general: result.message || "Invalid official email or password" });
+        return;
+      }
+
+      // Route to Login OTP verification with authority state & details
+      navigate("/verify-login-otp", {
+        state: {
+          email: form.email.trim(),
+          isAuthority: true,
+          authorityData: {
+            fullName: form.email.split("@")[0] || "Officer",
+            officialEmail: form.email.trim(),
+            category: form.category,
+            district: form.district.trim(),
+            authorityId: `AUTH-${Math.floor(1000 + Math.random() * 9000)}`,
+          },
+        },
+      });
+    } catch (err) {
+      console.error("Authority login error:", err);
+      setErrors({ general: "Server is unreachable. Please ensure authentication backend is running." });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validate();
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      const authoritySession = {
-        fullName: form.email.split("@")[0] || "Officer",
-        officialEmail: form.email.trim(),
-        category: form.category,
-        district: form.district.trim(),
-        authorityId: `AUTH-${Math.floor(1000 + Math.random() * 9000)}`,
-      };
-
-      localStorage.setItem("authority", JSON.stringify(authoritySession));
-      navigate("/authority-dashboard");
+      await handleAuthorityLogin();
     }
   };
 
@@ -156,6 +194,7 @@ export default function AuthorityAuth() {
                     className="w-full bg-transparent outline-none text-xs sm:text-sm text-white placeholder:text-slate-600"
                   />
                 </div>
+                {errors.district && <p className="text-xs text-red-400 mt-1">{errors.district}</p>}
               </div>
             </div>
 
@@ -168,11 +207,18 @@ export default function AuthorityAuth() {
               </Link>
             </div>
 
+            {errors.general && (
+              <p className="text-xs text-red-400 text-center bg-red-500/10 border border-red-500/20 py-2 px-3 rounded-lg">
+                {errors.general}
+              </p>
+            )}
+
             <button
               type="submit"
-              className="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm sm:text-base rounded-xl py-3 transition-colors shadow-lg shadow-teal-500/10 mt-2"
+              disabled={loading}
+              className="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm sm:text-base rounded-xl py-3 transition-colors shadow-lg shadow-teal-500/10 mt-2 disabled:opacity-50"
             >
-              Sign In to Authority Dashboard
+              {loading ? "Sending OTP..." : "Sign In & Verify OTP"}
             </button>
           </form>
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShieldCheck, User, Mail, Lock, IdCard, MapPin, Eye, EyeOff, Tag } from "lucide-react";
 import bgImage from "../assets/img3.webp";
+import { AUTH_API_URL } from "../config";
 
 function Field({ icon, label, type, placeholder, value, onChange, error, endAdornment }) {
   return (
@@ -41,6 +42,8 @@ const CATEGORIES = [
 export default function AuthoritySignup() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
   const [form, setForm] = useState({
     fullName: "",
     officialEmail: "",
@@ -65,20 +68,49 @@ export default function AuthoritySignup() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleRegister = async () => {
+    try {
+      setLoading(true);
+      setApiError("");
+
+      const url = `${AUTH_API_URL}/api/auth/register`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: form.fullName.trim(),
+          email: form.officialEmail.trim(),
+          password: form.password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setApiError(result.message || "Failed to register authority account. Please try again.");
+      } else {
+        navigate("/verify-otp", {
+          state: {
+            email: form.officialEmail.trim(),
+            isAuthority: true,
+          },
+        });
+      }
+    } catch (e) {
+      console.error("Authority registration error:", e);
+      setApiError("Server is unreachable. Please make sure the authentication backend is running.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setApiError("");
     const newErrors = validate();
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      const authoritySession = {
-        fullName: form.fullName.trim(),
-        officialEmail: form.officialEmail.trim(),
-        category: form.category,
-        district: form.district.trim(),
-        authorityId: form.authorityId.trim(),
-      };
-      localStorage.setItem("authority", JSON.stringify(authoritySession));
-      navigate("/authority-dashboard");
+      await handleRegister();
     }
   };
 
@@ -185,11 +217,18 @@ export default function AuthoritySignup() {
               📌 Aapke district aur category ke hisaab se complaints automatically aapke dashboard me route hongi.
             </p>
 
+            {apiError && (
+              <p className="text-xs text-red-400 text-center bg-red-500/10 border border-red-500/20 py-2 px-3 rounded-lg">
+                {apiError}
+              </p>
+            )}
+
             <button
               type="submit"
-              className="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm sm:text-base rounded-xl py-3 transition-colors shadow-lg shadow-teal-500/10"
+              disabled={loading}
+              className="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm sm:text-base rounded-xl py-3 transition-colors shadow-lg shadow-teal-500/10 disabled:opacity-50"
             >
-              Create Account & Go to Dashboard
+              {loading ? "Registering & Sending OTP..." : "Create Account & Verify OTP"}
             </button>
           </form>
 
