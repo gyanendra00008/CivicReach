@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { ShieldCheck } from "lucide-react";
+import bgImage from "../assets/img3.webp";
 
 export default function UserForgotPassword() {
   const [email, setEmail] = useState("");
@@ -10,7 +11,7 @@ export default function UserForgotPassword() {
 
   const handleReset = (e) => {
     e.preventDefault();
-    if (newPassword!== confirmPassword) {
+    if (newPassword !== confirmPassword) {
       alert("Password match nahi ho raha!");
       return;
     }
@@ -24,15 +25,11 @@ export default function UserForgotPassword() {
       {/* Background - Same as your User Login */}
       <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072"
+          src={bgImage}
           alt="bg"
-          className="w-full h-full object-cover opacity-40"
+          className="w-full h-full object-cover opacity-60"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-[#06152a]/90 via-[#0a2a5a]/80 to-[#06152a]/90"></div>
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, #3b82f6 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }}></div>
       </div>
 
       {/* Card - Same as your screenshot */}
@@ -42,7 +39,7 @@ export default function UserForgotPassword() {
           {/* Header */}
           <div className="text-center mb-6">
             <h2 className="text-white text-[22px] font-semibold flex items-center justify-center gap-2">
-              <span className="text-emerald-400">🛡️</span> User Password Reset
+              <ShieldCheck className="text-cyan-400" size={24} /> User Password Reset
             </h2>
             <p className="text-blue-300/70 text-[13px] mt-1">
               Reset your Password
