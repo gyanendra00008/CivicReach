@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShieldCheck, User, Mail, Lock, IdCard, MapPin, Eye, EyeOff } from "lucide-react";
+import { ShieldCheck, User, Mail, Lock, IdCard, MapPin, Eye, EyeOff, Tag } from "lucide-react";
 import bgImage from "../assets/img3.webp";
 
 function Field({ icon, label, type, placeholder, value, onChange, error, endAdornment }) {
   return (
     <div>
-      <label className="text-sm sm:text-base font-medium text-slate-400 mb-1.5 sm:mb-2 block">{label}</label>
+      <label className="text-xs sm:text-sm font-medium text-slate-400 mb-1.5 block">{label}</label>
       <div
-        className={`flex items-center gap-2 bg-[#0B1526] border rounded-lg px-3 sm:px-4 py-3 sm:py-3.5 transition-colors ${
-          error ? "border-red-500/60" : "border-white/5 focus-within:border-teal-400/60"
+        className={`flex items-center gap-2 bg-[#0B1526] border rounded-xl px-3.5 py-3 transition-colors ${
+          error ? "border-red-500/60" : "border-white/10 focus-within:border-teal-400/60"
         }`}
       >
         <span className="text-slate-500">{icon}</span>
@@ -27,7 +27,16 @@ function Field({ icon, label, type, placeholder, value, onChange, error, endAdor
   );
 }
 
-const CATEGORIES = ["Water", "Electricity", "Roads", "Sanitation", "Health", "Other"];
+const CATEGORIES = [
+  "Electricity",
+  "Water supply",
+  "Road & infrastructure",
+  "Sanitation",
+  "Traffic",
+  "Public health",
+  "Public safety",
+  "Animal control",
+];
 
 export default function AuthoritySignup() {
   const navigate = useNavigate();
@@ -37,8 +46,8 @@ export default function AuthoritySignup() {
     officialEmail: "",
     password: "",
     authorityId: "",
-    category: "Water",
-    district: "",
+    category: "Electricity",
+    district: "South West Delhi",
   });
   const [errors, setErrors] = useState({});
 
@@ -49,8 +58,8 @@ export default function AuthoritySignup() {
     const newErrors = {};
     if (!form.fullName.trim()) newErrors.fullName = "Full name is required";
     if (!form.officialEmail.trim()) newErrors.officialEmail = "Official email is required";
-    if (!form.password.trim() || form.password.length < 8)
-      newErrors.password = "Password must be at least 8 characters";
+    if (!form.password.trim() || form.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
     if (!form.authorityId.trim()) newErrors.authorityId = "Authority ID is required";
     if (!form.district.trim()) newErrors.district = "District is required";
     return newErrors;
@@ -61,55 +70,63 @@ export default function AuthoritySignup() {
     const newErrors = validate();
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      navigate("/authority");
+      const authoritySession = {
+        fullName: form.fullName.trim(),
+        officialEmail: form.officialEmail.trim(),
+        category: form.category,
+        district: form.district.trim(),
+        authorityId: form.authorityId.trim(),
+      };
+      localStorage.setItem("authority", JSON.stringify(authoritySession));
+      navigate("/authority-dashboard");
     }
   };
 
   return (
     <div
-      className="min-h-screen w-full flex items-center justify-center relative overflow-hidden px-4 py-8 sm:py-10 bg-cover bg-center"
+      className="min-h-screen w-full flex items-center justify-center relative overflow-hidden px-4 py-8 bg-cover bg-center"
       style={{ backgroundImage: `url(${bgImage})` }}
     >
-      <div className="absolute inset-0 bg-[#0A1120]/70" />
+      <div className="absolute inset-0 bg-[#0A1120]/75 backdrop-blur-sm" />
 
-      <div className="relative z-10 w-full max-w-sm sm:max-w-lg">
-        <div className="bg-[#111C31] border border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-9 shadow-2xl shadow-black/40">
-          <div className="mb-5 sm:mb-7 text-center">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-2.5 sm:mb-3">
-              <ShieldCheck size={20} className="text-teal-400" />
+      <div className="relative z-10 w-full max-w-sm sm:max-w-md my-4">
+        <div className="bg-[#111C31] border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-9 shadow-2xl shadow-black/50">
+          <div className="mb-5 text-center">
+            <div className="w-12 h-12 rounded-full bg-teal-500/15 text-teal-400 flex items-center justify-center mx-auto mb-2.5 border border-teal-500/20">
+              <ShieldCheck size={24} />
             </div>
-            <h1 className="text-xl sm:text-2xl font-semibold text-white">Authority signup</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-white">Authority Signup</h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Apna official account banao complaints handle karne ke liye
+              Create an official account to manage routed complaints
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5" noValidate>
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <Field
-              icon={<User size={18} />}
-              label="Full name"
+              icon={<User size={16} />}
+              label="Officer Full Name"
               type="text"
-              placeholder="Ramesh Kumar"
+              placeholder="e.g. Ramesh Kumar"
               value={form.fullName}
               onChange={handleChange("fullName")}
               error={errors.fullName}
             />
 
             <Field
-              icon={<Mail size={18} />}
-              label="Official email"
+              icon={<Mail size={16} />}
+              label="Official Email"
               type="email"
-              placeholder="name@department.gov.in"
+              placeholder="officer@pwd.gov.in"
               value={form.officialEmail}
               onChange={handleChange("officialEmail")}
               error={errors.officialEmail}
             />
 
             <Field
-              icon={<Lock size={18} />}
+              icon={<Lock size={16} />}
               label="Password"
               type={showPassword ? "text" : "password"}
-              placeholder="At least 8 characters"
+              placeholder="••••••••"
               value={form.password}
               onChange={handleChange("password")}
               error={errors.password}
@@ -125,26 +142,27 @@ export default function AuthoritySignup() {
             />
 
             <Field
-              icon={<IdCard size={18} />}
-              label="Authority ID"
+              icon={<IdCard size={16} />}
+              label="Official Employee ID"
               type="text"
-              placeholder="Employee or department ID"
+              placeholder="AUTH-9872"
               value={form.authorityId}
               onChange={handleChange("authorityId")}
               error={errors.authorityId}
             />
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-sm sm:text-base font-medium text-slate-400 mb-1.5 sm:mb-2 block">Category</label>
-                <div className="bg-[#0B1526] border border-white/5 rounded-lg px-3 sm:px-4 py-3 sm:py-3.5 focus-within:border-teal-400/60">
+                <label className="text-xs sm:text-sm font-medium text-slate-400 mb-1.5 block">Department</label>
+                <div className="flex items-center gap-2 bg-[#0B1526] border border-white/10 rounded-xl px-3 py-2.5">
+                  <Tag size={14} className="text-teal-400 shrink-0" />
                   <select
                     value={form.category}
                     onChange={handleChange("category")}
-                    className="w-full bg-transparent outline-none text-sm sm:text-base text-white"
+                    className="w-full bg-transparent outline-none text-xs sm:text-sm text-white"
                   >
                     {CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat} className="bg-[#0B1526] text-white">
+                      <option key={cat} value={cat} className="bg-[#111C31] text-white">
                         {cat}
                       </option>
                     ))}
@@ -153,29 +171,29 @@ export default function AuthoritySignup() {
               </div>
 
               <Field
-                icon={<MapPin size={18} />}
+                icon={<MapPin size={16} />}
                 label="District"
                 type="text"
-                placeholder="e.g. Central Delhi"
+                placeholder="South West Delhi"
                 value={form.district}
                 onChange={handleChange("district")}
                 error={errors.district}
               />
             </div>
 
-            <p className="text-xs text-slate-500">
-              Category aur district se basis pe hi complaints tumhare dashboard mein fetch honge.
+            <p className="text-[11px] text-teal-400/80 bg-teal-500/10 p-2.5 rounded-lg border border-teal-500/20">
+              📌 Aapke district aur category ke hisaab se complaints automatically aapke dashboard me route hongi.
             </p>
 
             <button
               type="submit"
-              className="w-full bg-teal-500 hover:bg-teal-400 text-[#0A1120] font-semibold text-sm sm:text-base rounded-lg py-2.5 sm:py-3 transition-colors"
+              className="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm sm:text-base rounded-xl py-3 transition-colors shadow-lg shadow-teal-500/10"
             >
-              Create account
+              Create Account & Go to Dashboard
             </button>
           </form>
 
-          <p className="text-center text-xs sm:text-sm text-slate-500 mt-5 sm:mt-6">
+          <p className="text-center text-xs text-slate-500 mt-4">
             Already have an account?{" "}
             <Link to="/authority" className="text-teal-400 hover:text-teal-300">
               Log in

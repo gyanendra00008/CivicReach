@@ -55,16 +55,15 @@ export default function LoginOtpVerify() {
         return;
       }
 
-      // Store tokens / user info if provided
+      // Store tokens / user info
       if (result.accessToken) {
         localStorage.setItem("accessToken", result.accessToken);
       }
-      if (result.user) {
-        localStorage.setItem("user", JSON.stringify(result.user));
-      }
+      const verifiedUser = result.user || { email: email };
+      localStorage.setItem("user", JSON.stringify(verifiedUser));
 
       // Route to User Dashboard on successful verification
-      navigate("/user-dashboard", { state: { email, user: result.user } });
+      navigate("/user-dashboard", { state: { email: verifiedUser.email, user: verifiedUser } });
     } catch (e) {
       console.error("Error verifying login OTP:", e);
       setError("Server unreachable. Please make sure backend is running.");
