@@ -45,7 +45,7 @@ const HowItWorks = () => {
             </div>
           </div>
 
-          {/* Card 2 - AI Sorts */}
+          {/* Card 2 - Auto Route */}
           <div className="relative group rounded-[20px] border border-[#2dd4bf]/20 bg-[#0f1923]/80 p-8 backdrop-blur-md hover:border-[#2dd4bf]/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(45,212,191,0.15)]">
             <div className="flex flex-col items-center text-center">
               <span className="text-[#4deeea] text-4xl font-bold drop-shadow-[0_0_10px_rgba(77,238,234,0.8)] mb-2">2.</span>
@@ -74,9 +74,9 @@ const HowItWorks = () => {
                 <span className="bg-[#1c3440] text-[#9fb8c5] text-xs px-3 py-1 rounded-lg border border-white/5">Water Dept</span>
               </div>
 
-              <h3 className="text-3xl font-bold text-white mt-4 mb-3 text-left w-full">2. AI Sorts</h3>
+              <h3 className="text-3xl font-bold text-white mt-4 mb-3 text-left w-full">2. Auto Route</h3>
               <p className="text-[#9fb8c5] text-left w-full text-[15px] leading-relaxed">
-                Our AI classifies the issue & routes it to the right department instantly.
+                The platform matches your location & category to route it to the right department instantly.
               </p>
             </div>
           </div>
@@ -110,7 +110,8 @@ const HowItWorks = () => {
                 </div>
               </div>
 
-              <p className="text-[#9fb8c5] text-left w-full text-[15px] leading-relaxed mt-6">
+              <h3 className="text-3xl font-bold text-white mt-4 mb-3 text-left w-full">3. Track Status</h3>
+              <p className="text-[#9fb8c5] text-left w-full text-[15px] leading-relaxed">
                 Track real-time status updates until the issue is resolved.
               </p>
             </div>

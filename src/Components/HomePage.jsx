@@ -131,7 +131,7 @@ const HomePage = () => {
             </h1>
 
             <p className="text-gray-300 text-base sm:text-base mb-8 max-w-md leading-relaxed">
-              Pin the problem on the map, and CivicRoute finds the exact authority responsible—no more complaints lost between departments.
+              Pin the problem on the map, and CivicReach finds the exact authority responsible—no more complaints lost between departments.
             </p>
 
             {/* CTA Buttons */}
