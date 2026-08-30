@@ -131,12 +131,14 @@ export default function UserAuth() {
               }
             />
               <div className="flex justify-end -mt-1">
-   <Link to="/user/forgotPass"  
-      className="text-xs sm:text-sm text-teal-400 hover:text-teal-300 hover:underline"
-    >
-      Forgot Password?
-    </Link>
-  </div>
+                <Link
+                  to="/user/forgotPass"
+                  state={{ email: form.email }}
+                  className="text-xs sm:text-sm text-teal-400 hover:text-teal-300 hover:underline"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
             <button
               type="submit"
               className="w-full bg-teal-500 hover:bg-teal-400 text-[#0A1120] font-semibold text-sm sm:text-base rounded-lg py-2.5 sm:py-3 transition-colors"
