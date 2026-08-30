@@ -11,6 +11,7 @@ import OtpVerify from "./Components/OtpVerify";
 import LoginOtpVerify from "./Components/LoginOtpVerify";
 import AuthorityForgotPassword from "./Components/AuthorityForgot";
 import UserForgotPassword from "./Components/UserForgot";
+
 function App() {
   return (
     <BrowserRouter>
@@ -28,8 +29,8 @@ function App() {
         <Route path="/complaints" element={<ComplaintPage />} />
         <Route path="/complaints/new" element={<UploadPage />} />
         <Route path="/complaints/success" element={<ComplaintSuccess />} />
-        <Route path="/authority/forgotPass" element={<AuthorityForgotPassword />} />
-        <Route path="/user/forgotPass" element={<UserForgotPassword />} />
+        <Route path="/authority/forgot-password" element={<AuthorityForgotPassword />} />
+        <Route path="/user/forgot-password" element={<UserForgotPassword />} />
       </Routes>
     </BrowserRouter>
   );

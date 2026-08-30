@@ -78,7 +78,7 @@ export default function AuthoritySignup() {
             </div>
             <h1 className="text-xl sm:text-2xl font-semibold text-white">Authority signup</h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Apna official account banao complaints handle karne ke liye
+              Create your official account to handle complaints
             </p>
           </div>
 
@@ -153,7 +153,7 @@ export default function AuthoritySignup() {
             </div>
 
             <p className="text-xs text-slate-500">
-              Category aur district se basis pe hi complaints tumhare dashboard mein fetch honge.
+              Complaints will be fetched to your dashboard based on category and district.
             </p>
 
             <button

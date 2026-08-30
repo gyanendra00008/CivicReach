@@ -100,7 +100,7 @@ export default function AuthorityAuth() {
               }
             />
               <div className="flex justify-end -mt-1">
-    <Link to="/authority/forgotPass" 
+    <Link to="/authority/forgot-password" 
       className="text-xs sm:text-sm text-teal-400 hover:text-teal-300 hover:underline"
     >
       Forgot Password?

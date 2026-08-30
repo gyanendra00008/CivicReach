@@ -20,7 +20,7 @@ export default function OtpVerify() {
       newOtp[index] = value ? value[value.length - 1] : "";
       setOtp(newOtp);
     
-      // Next input par focus bhejna
+      // Move focus to next input
       if (value && index < 5) {
         inputRefs.current[index + 1]?.focus();
       }
@@ -57,12 +57,12 @@ export default function OtpVerify() {
           return;
         }
     
-        // OTP Verify hone ke baad User ko Login page par bhejna
+        // After OTP verification, redirect user to Login page
         navigate("/login");
     }catch(e){
-      console.log("There is Any error in Reg Otp");
+      console.log("There is an error in Reg Otp");
     }finally{
-      console.log("Request Gyi thi ek baar ");
+      console.log("Request was sent once");
     }
   }
   const handleSubmit = async (e) => {

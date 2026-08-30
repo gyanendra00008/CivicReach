@@ -11,11 +11,11 @@ export default function AuthorityForgotPassword() {
   const handleReset = (e) => {
     e.preventDefault();
     if (newPassword!== confirmPassword) {
-      alert("Password match nahi ho raha!");
+      alert("Passwords do not match!");
       return;
     }
-    // Demo ke liye - yahan tum backend ka logic lagana
-    alert(`Password reset ho gaya ${email} ke liye!`);
+    // For demo purposes - add your backend logic here
+    alert(`Password reset successful for ${email}!`);
     navigate("/authority");
   };
 

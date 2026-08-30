@@ -36,7 +36,7 @@ function ComplaintSuccess() {
           </h1>
         </div>
         <p className="text-sm text-slate-400 mb-6">
-          Tumhari complaint sahi authority tak forward kar di gayi hai
+          Your complaint has been forwarded to the right authority
         </p>
 
         <div className="bg-white/5 border border-white/10 rounded-xl p-5 flex flex-col gap-3 mb-8">
@@ -97,7 +97,7 @@ function ComplaintSuccess() {
           onClick={() => navigate("/complaints")}
           className="w-full bg-teal-400 hover:bg-teal-300 text-slate-900 font-bold text-base sm:text-lg py-3 rounded-lg transition-colors"
         >
-          Dashboard pe wapas jao
+          Back to dashboard
         </button>
       </div>
     </div>

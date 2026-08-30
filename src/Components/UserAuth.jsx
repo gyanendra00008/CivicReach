@@ -68,10 +68,10 @@ export default function UserAuth() {
           state: { email: form.email.trim() } 
         });
     }catch(e){
-      console.log("There is something wrong in your side ");
+      console.log("Something went wrong on your side");
 
     }finally{
-      console.log("Request Gyi thi ");
+      console.log("Request was sent");
       setLoading(false);
     }
 
@@ -131,7 +131,7 @@ export default function UserAuth() {
               }
             />
               <div className="flex justify-end -mt-1">
-   <Link to="/user/forgotPass"  
+   <Link to="/user/forgot-password"  
       className="text-xs sm:text-sm text-teal-400 hover:text-teal-300 hover:underline"
     >
       Forgot Password?

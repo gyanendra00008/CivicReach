@@ -77,7 +77,7 @@ export default function UploadPage() {
               New complaint
             </h1>
             <p className="text-base sm:text-lg text-teal-400 mt-2">
-              Details bharo, hum sahi authority tak pahuncha denge
+              Fill in the details, we'll get it to the right authority
             </p>
           </div>
 
@@ -99,7 +99,7 @@ export default function UploadPage() {
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Paani ka leakage main road pe"
+                  placeholder="e.g. Water leakage on main road"
                   className="flex-1 bg-transparent outline-none text-lg sm:text-xl text-white placeholder:text-slate-600"
                 />
               </div>
@@ -145,7 +145,7 @@ export default function UploadPage() {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Samasya ke baare mein detail mein likho"
+                  placeholder="Write details about the issue"
                   rows={4}
                   className="flex-1 bg-transparent outline-none text-lg sm:text-xl text-white placeholder:text-slate-600 resize-none"
                 />
@@ -186,7 +186,7 @@ export default function UploadPage() {
                   <Upload size={20} className="text-blue-400" />
                 </div>
                 <p className="text-base sm:text-lg text-slate-400">
-                  {photo ? photo.name : "Photo upload karo ya yahan drag karo"}
+                  {photo ? photo.name : "Upload a photo or drag it here"}
                 </p>
                 <input
                   id="photo-upload"

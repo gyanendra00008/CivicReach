@@ -5,11 +5,11 @@ import bgImage from "../assets/img3.webp";
 function daysAgo(dateStr) {
   const diffMs = Date.now() - new Date(dateStr).getTime();
   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  if (days <= 0) return "Aaj";
-  if (days === 1) return "1 din pehle";
-  if (days < 7) return `${days} din pehle`;
+  if (days <= 0) return "Today";
+  if (days === 1) return "1 day ago";
+  if (days < 7) return `${days} days ago`;
   const weeks = Math.floor(days / 7);
-  return weeks === 1 ? "1 hafta pehle" : `${weeks} hafte pehle`;
+  return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
 }
 
 function ComplaintPage() {
@@ -45,11 +45,11 @@ function ComplaintPage() {
       <div className="w-full max-w-[95vw] sm:w-[85vw] lg:w-[75vw] bg-slate-950/90 backdrop-blur-md border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-12 flex flex-col gap-6 sm:gap-8 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between gap-3">
           <p className="text-lg sm:text-xl lg:text-2xl text-slate-300">
-            Tumhari{" "}
+            You have{" "}
             <span className="font-semibold text-white">
               {complaints.length}
             </span>{" "}
-            complaints hain
+            complaints
           </p>
           <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-teal-400 text-slate-900 flex items-center justify-center shrink-0">
             <svg
@@ -98,7 +98,7 @@ function ComplaintPage() {
 
           {complaints.length === 0 ? (
             <p className="text-base sm:text-lg text-slate-400 py-8 text-center">
-              Abhi koi complaint nahi hai. Naya complaint file karo!
+              No complaints yet. File a new complaint!
             </p>
           ) : (
             <div className="flex flex-col divide-y divide-white/10">
