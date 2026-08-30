@@ -132,13 +132,9 @@ def health_check():
 
 # 1. Reverse Geocoding Route (Supports both /Location/{lan}/{lon} and /Location/{lat}/{lon})
 @app.get("/Location/{lat}/{lon}")
-@app.get("/Location/{lan}/{lon}")
-def convert_coordinates(lat: Optional[float] = None, lan: Optional[float] = None, lon: float = 0.0):
-    actual_lat = lat if lat is not None else lan
-    if actual_lat is None:
-        raise HTTPException(status_code=400, detail="Latitude is required")
-
-    user_location = get_location_details(actual_lat, lon)
+def convert_coordinates(lat: float, lon: float):
+    
+    user_location = get_location_details(lat, lon)
     if user_location:
         return {
             "status": "success",
