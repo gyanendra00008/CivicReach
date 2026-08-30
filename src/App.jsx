@@ -11,6 +11,8 @@ import OtpVerify from "./Components/OtpVerify";
 import LoginOtpVerify from "./Components/LoginOtpVerify";
 import AuthorityForgotPassword from "./Components/AuthorityForgot";
 import UserForgotPassword from "./Components/UserForgot";
+import AuthorityDashboard from "./Components/AuthorityDashboard";
+
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +21,7 @@ function App() {
         <Route path="/login" element={<UserAuth />} />
         <Route path="/authority" element={<AuthorityAuth />} />
         <Route path="/authority-login" element={<AuthorityAuth />} />
+        <Route path="/authority-dashboard" element={<AuthorityDashboard />} />
         <Route path="/signup" element={<UserSignup />} />
         <Route path="/authority-signup" element={<AuthoritySignup />} />
         <Route path="/verify-otp" element={<OtpVerify />} />

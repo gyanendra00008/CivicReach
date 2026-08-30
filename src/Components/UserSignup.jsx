@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, Mail, Phone, Lock } from "lucide-react";
+import { User, Mail, Phone, Lock, Eye, EyeOff } from "lucide-react";
 import bgImage from "../assets/img3.webp";
 import { AUTH_API_URL } from "../config";
 
-function Field({ icon, label, type, placeholder, value, onChange, error }) {
+function Field({ icon, label, type, placeholder, value, onChange, error, endAdornment }) {
   return (
     <div>
       <label className="text-sm sm:text-base font-medium text-slate-400 mb-1.5 sm:mb-2 block">{label}</label>
@@ -21,6 +21,7 @@ function Field({ icon, label, type, placeholder, value, onChange, error }) {
           placeholder={placeholder}
           className="flex-1 bg-transparent outline-none text-sm sm:text-base text-white placeholder:text-slate-600"
         />
+        {endAdornment}
       </div>
       {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
     </div>
@@ -29,6 +30,7 @@ function Field({ icon, label, type, placeholder, value, onChange, error }) {
 
 export default function UserSignup() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [form, setForm] = useState({
     fullName: "",
@@ -151,11 +153,20 @@ export default function UserSignup() {
             <Field
               icon={<Lock size={18} />}
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="At least 8 characters"
               value={form.password}
               onChange={handleChange("password")}
               error={errors.password}
+              endAdornment={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="text-slate-500 hover:text-slate-300"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              }
             />
 
             <div>

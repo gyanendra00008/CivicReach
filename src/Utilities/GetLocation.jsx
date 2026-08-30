@@ -1,7 +1,7 @@
-import React, { use } from 'react'
-import './GetLocation.css'
-import { useRef } from 'react';
-import { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import './GetLocation.css';
+import { FASTAPI_API_URL } from '../config';
+
 const GetLocation = () => {
     const btn = useRef();
     const [isloading , setloading]=useState(false);
@@ -20,7 +20,8 @@ const GetLocation = () => {
             try{
                 // btn.current.textContent="Loading...";
                 // btn.current.disabled =true;
-                const response = await fetch(`http://127.0.0.1:8000/Location/${lat}/${lon}`);
+                const response = await fetch(`${FASTAPI_API_URL}/Location/${lat}/${lon}`);
+
 
                 const result = await response.json();
 

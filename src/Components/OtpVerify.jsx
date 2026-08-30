@@ -38,6 +38,8 @@ export default function OtpVerify() {
     }
   };
 
+  const isAuthority = location.state?.isAuthority || false;
+
   async function RegisterOtpvirification(otp){
     const url = `${AUTH_API_URL}/api/auth/verify-email`;
 
@@ -57,10 +59,15 @@ export default function OtpVerify() {
           return;
         }
     
-        // OTP Verify hone ke baad User ko Login page par bhejna
-        navigate("/login");
+        // OTP Verify hone ke baad User ko Login ya Authority Login page par bhejna
+        if (isAuthority) {
+          navigate("/authority", { state: { email, verified: true } });
+        } else {
+          navigate("/login", { state: { email, verified: true } });
+        }
     }catch(e){
       console.log("There is Any error in Reg Otp");
+      setError("Server unreachable. Please check backend connection.");
     }finally{
       console.log("Request Gyi thi ek baar ");
     }

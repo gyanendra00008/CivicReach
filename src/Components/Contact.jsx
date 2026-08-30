@@ -12,10 +12,10 @@ const Contact = () => {
         
         <div className="mt-6 flex flex-col items-center justify-center text-center">
           <p className="text-white/60 text-center">
-            Email: <span className="text-cyan-400">hello@civicreach.com</span>
+            Email: <span className="text-cyan-400">admin.civicreach@gmail.com</span>
           </p>
           <p className="text-white/60 mt-2 text-center">
-            Website: <span className="text-white">www.civicreach.com</span>
+            Website: <span className="text-white">https://civic-reach-iota.vercel.app/</span>
           </p>
           <p className="text-white/40 text-sm mt-3 text-center">
             We usually reply within 24 hours.

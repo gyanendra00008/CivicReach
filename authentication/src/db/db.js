@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 
 async function connectDB() {
   try {
-    if (!process.env.MONGODB_URI) {
-      throw new Error("MONGODB_URI is not defined in your .env file");
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+    if (!mongoUri) {
+      throw new Error("MONGODB_URI (or MONGO_URI) is not defined in environment variables");
     }
-    await mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,
+    await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 8000,
     });
     console.log("Connected to MongoDB database successfully");
   } catch (error) {
@@ -15,8 +16,8 @@ async function connectDB() {
       console.error("\n⚠️  IMPORTANT: If your server timed out connecting to MongoDB Atlas:");
       console.error("1. Go to MongoDB Atlas (https://cloud.mongodb.com)");
       console.error("2. Navigate to 'Network Access' -> 'IP Access List'");
-      console.error("3. Click 'Add IP Address' and add your Current IP Address (or 0.0.0.0/0 for testing)");
-      console.error("4. Check if your ISP / firewall blocks port 27017\n");
+      console.error("3. Click 'Add IP Address' and add '0.0.0.0/0' (Allow Access from Anywhere) so Render can connect");
+      console.error("4. Check if your database username and password in MONGODB_URI are correct\n");
     }
     throw error;
   }
