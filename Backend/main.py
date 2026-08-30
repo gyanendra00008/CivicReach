@@ -417,9 +417,31 @@ def update_status(
                 "message": f"Status updated to '{new_status}' for problem '{data.title}'",
             }
 
-    raise HTTPException(
-        status_code=404, detail="Problem not found for given ID / Pincode + Title"
-    )
+# 7. Helper to Fetch Image URL (by pincode & title)
+def get_image_url(pincode: int | str, title: str) -> Optional[str]:
+    try:
+        pincode_clean = int(str(pincode).strip().replace(" ", ""))
+    except ValueError:
+        pincode_clean = str(pincode).strip()
+
+    document = collection.find_one({
+        "pincode": pincode_clean,
+        "problems.title": title.strip()
+    })
+
+    if document:
+        for problem in document.get("problems", []):
+            if problem.get("title") == title.strip():
+                return problem.get("img_url")
+    return None
+
+
+@app.get("/api/problems/image")
+def fetch_image_url(pincode: str, title: str):
+    url = get_image_url(pincode, title)
+    if url:
+        return {"status": "success", "img_url": url}
+    raise HTTPException(status_code=404, detail="Image not found for given pincode and title")
 
 
 if __name__ == "__main__":
