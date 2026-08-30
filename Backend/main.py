@@ -299,13 +299,13 @@ def get_authority_problems(
         filtered = []
         for p in all_problems:
             # District filter
-            if district and isinstance(district, str) and district.strip().lower() != "all":
+            if district and isinstance(district, str) and district.strip().lower() not in ["all", "all districts"]:
                 d_str = str(p.get("district") or "").lower()
                 if district.strip().lower() not in d_str:
                     continue
 
             # Category filter (e.g. "Roads" matches "Road & infrastructure")
-            if category and isinstance(category, str) and category.strip().lower() != "all":
+            if category and isinstance(category, str) and category.strip().lower() not in ["all", "all categories"]:
                 c_str = str(p.get("category") or "").lower()
                 req_cat = category.strip().lower()
                 if req_cat not in c_str and c_str not in req_cat:
