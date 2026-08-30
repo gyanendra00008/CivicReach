@@ -1,7 +1,7 @@
 const express=require('express');
 const authrouter=express.Router();
 
-const {register,verifyEmail,login,verifyLoginOtp,refreshToken,getme, logout}=require('../controller/auth.controller')
+const {register,verifyEmail,login,verifyLoginOtp,refreshToken,getme, logout, resetPassword}=require('../controller/auth.controller')
 
 
 
@@ -12,5 +12,6 @@ authrouter.post("/verify-login",verifyLoginOtp)
 authrouter.get("/getme",getme)
 authrouter.post("/refresh-token",refreshToken)
 authrouter.post("/logout",logout)
+authrouter.post("/reset-password",resetPassword)
 
 module.exports=authrouter;
