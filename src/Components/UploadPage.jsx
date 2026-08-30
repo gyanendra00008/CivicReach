@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileText, Tag, AlignLeft, MapPin, Upload, Send, ArrowLeft, Loader2, Image as ImageIcon, X } from "lucide-react";
 import bgImage from "../assets/img3.webp";
-import { FASTAPI_API_URL } from "../config";
+import { FASTAPI_API_URL, AUTH_API_URL } from "../config";
+import { authFetch } from "../Utilities/auth";
 
 const CATEGORIES = [
   "Electricity",
@@ -34,21 +35,67 @@ export default function UploadPage() {
 
   // 1. Auth check & GPS detection
   useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    const token = localStorage.getItem("accessToken");
-    if (!userStr && !token) {
-      navigate("/login", { replace: true });
-      return;
+    let isMounted = true;
+
+    async function verifySession() {
+      const token = localStorage.getItem("accessToken");
+      const userStr = localStorage.getItem("user");
+
+      if (!token) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
+      try {
+        const response = await authFetch(`${AUTH_API_URL}/api/auth/getme`);
+        if (response.ok) {
+          const result = await response.json();
+          if (isMounted) {
+            const userObj = {
+              username: result.username,
+              email: result.email,
+            };
+            localStorage.setItem("user", JSON.stringify(userObj));
+            setUser(userObj);
+          }
+        } else {
+          if (isMounted) {
+            navigate("/login", { replace: true });
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Session verification failed:", err);
+        if (userStr) {
+          try {
+            const localUser = JSON.parse(userStr);
+            if (isMounted) {
+              setUser(localUser);
+            }
+          } catch (e) {
+            if (isMounted) {
+              navigate("/login", { replace: true });
+              return;
+            }
+          }
+        } else {
+          if (isMounted) {
+            navigate("/login", { replace: true });
+            return;
+          }
+        }
+      }
+
+      if (isMounted) {
+        detectLocation();
+      }
     }
 
-    try {
-      const u = JSON.parse(userStr || "{}");
-      setUser(u);
-    } catch (e) {
-      setUser({ email: "user@civicreach.app" });
-    }
+    verifySession();
 
-    detectLocation();
+    return () => {
+      isMounted = false;
+    };
   }, [navigate]);
 
   const detectLocation = () => {

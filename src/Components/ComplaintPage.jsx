@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { User, LogOut, RefreshCw, PlusCircle, AlertCircle, Clock, CheckCircle2, AlertTriangle, MapPin } from "lucide-react";
 import bgImage from "../assets/img3.webp";
-import { FASTAPI_API_URL } from "../config";
+import { FASTAPI_API_URL, AUTH_API_URL } from "../config";
+import { authFetch, logoutUser } from "../Utilities/auth";
 
 function daysAgo(dateStr) {
   if (!dateStr) return "Recently";
@@ -27,32 +28,58 @@ function ComplaintPage() {
 
   // 1. Authentication Check & User details initialization
   useEffect(() => {
-    let currentUser = null;
-    const storedUserStr = localStorage.getItem("user");
-    const token = localStorage.getItem("accessToken");
+    let isMounted = true;
 
-    if (storedUserStr) {
-      try {
-        currentUser = JSON.parse(storedUserStr);
-      } catch (e) {
-        currentUser = null;
+    async function verifySession() {
+      const token = localStorage.getItem("accessToken");
+      const storedUserStr = localStorage.getItem("user");
+
+      if (!token) {
+        navigate("/login", { replace: true });
+        return;
       }
-    } else if (location.state?.user) {
-      currentUser = location.state.user;
-    } else if (location.state?.email) {
-      currentUser = { email: location.state.email };
+
+      try {
+        const response = await authFetch(`${AUTH_API_URL}/api/auth/getme`);
+        if (response.ok) {
+          const result = await response.json();
+          if (isMounted) {
+            const userObj = {
+              username: result.username,
+              email: result.email,
+            };
+            localStorage.setItem("user", JSON.stringify(userObj));
+            setUser(userObj);
+            fetchUserProblems(userObj.email);
+          }
+        } else {
+          if (isMounted) {
+            navigate("/login", { replace: true });
+          }
+        }
+      } catch (err) {
+        console.error("Session verification failed:", err);
+        if (storedUserStr) {
+          try {
+            const localUser = JSON.parse(storedUserStr);
+            if (isMounted) {
+              setUser(localUser);
+              fetchUserProblems(localUser.email);
+            }
+          } catch (e) {
+            if (isMounted) navigate("/login", { replace: true });
+          }
+        } else {
+          if (isMounted) navigate("/login", { replace: true });
+        }
+      }
     }
 
-    // If not logged in, redirect to login page
-    if (!currentUser?.email && !token) {
-      navigate("/login", { replace: true });
-      return;
-    }
+    verifySession();
 
-    // If user has token or email, set user state and fetch problems
-    const userObj = currentUser || { email: "user@civicreach.app" };
-    setUser(userObj);
-    fetchUserProblems(userObj.email);
+    return () => {
+      isMounted = false;
+    };
   }, [navigate]);
 
   // 2. Fetch User's Problems from FastAPI Backend
@@ -79,9 +106,8 @@ function ComplaintPage() {
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
+  const handleLogout = async () => {
+    await logoutUser();
     navigate("/login");
   };
 

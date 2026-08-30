@@ -52,21 +52,21 @@ export default function AuthorityDashboard() {
 
   // 1. Auth check
   useEffect(() => {
-    const authStr = localStorage.getItem("authority");
+      const authStr = localStorage.getItem("authority");
     if (!authStr) {
-      navigate("/authority", { replace: true });
-      return;
-    }
+        navigate("/authority", { replace: true });
+        return;
+      }
 
-    try {
-      const authData = JSON.parse(authStr);
-      setAuthority(authData);
-      setSelectedCategory(authData.category || "All");
-      setDistrictFilter(authData.district || "");
-      fetchComplaints(authData.district, authData.category);
-    } catch (e) {
+      try {
+            const authData = JSON.parse(authStr);
+            setAuthority(authData);
+            setSelectedCategory(authData.category || "All");
+            setDistrictFilter(authData.district || "");
+            fetchComplaints(authData.district, authData.category);
+          } catch (e) {
       navigate("/authority", { replace: true });
-    }
+        }
   }, [navigate]);
 
   // 2. Fetch Complaints for this District & Category
