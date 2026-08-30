@@ -451,6 +451,51 @@ async function logout(req, res, next) {
   }
 }
 
+async function resetPassword(req,res){
+
+    try {
+    const { email, password } = req.body;
+    
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are required",
+      });
+    }
+
+   const normalizedEmail = email.toLowerCase().trim();
+
+    // Find user by email
+    const user = await usermodel.findOne({ email: normalizedEmail });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.verified) {
+      return res.status(401).json({ message: "User not verified. Please verify your email." });
+    }
+
+    const hashedPass = await bcrypt.hash(password, 12);
+
+    user.password=hashedPass;
+    await user.save();
+
+    return res.status(200).json({
+      message:"Password reset sucessfully"
+    })
+     
+
+  }
+
+  catch(error){
+    console.log(error);
+  }
+
+
+
+
+}
+
 module.exports = {
   register,
   verifyEmail,
@@ -459,4 +504,5 @@ module.exports = {
   verifyLoginOtp,
   getme,
   logout,
+  resetPassword
 };
