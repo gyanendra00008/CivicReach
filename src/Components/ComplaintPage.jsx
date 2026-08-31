@@ -151,7 +151,7 @@ function ComplaintPage() {
               <span>Citizen Dashboard</span>
             </h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-              Aapki submit ki gayi saari complaints aur live status
+              Your all SUbmitted problems and their Live status
             </p>
           </div>
 
@@ -237,7 +237,7 @@ function ComplaintPage() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base sm:text-lg font-semibold text-white">
-              Aapki Complaints ({complaints.length})
+              Your Complaints ({complaints.length})
             </h3>
             <span className="text-xs text-slate-400">Database Sync: Active</span>
           </div>
@@ -252,16 +252,16 @@ function ComplaintPage() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-16 text-slate-400 gap-3">
               <RefreshCw size={32} className="animate-spin text-teal-400" />
-              <p className="text-sm">Database se problems load ho rahi hain...</p>
+              <p className="text-sm">Problems are Loading from database...</p>
             </div>
           ) : complaints.length === 0 ? (
             <div className="bg-[#0B1526]/50 border border-dashed border-white/10 rounded-2xl py-12 px-4 flex flex-col items-center justify-center text-center">
               <div className="w-12 h-12 rounded-full bg-teal-500/10 text-teal-400 flex items-center justify-center mb-3">
                 <CheckCircle2 size={24} />
               </div>
-              <p className="text-base sm:text-lg font-medium text-white">Abhi tak koi problem darj nahi ki gayi hai</p>
+              <p className="text-base sm:text-lg font-medium text-white">There is No Problem Registered till Now</p>
               <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-sm">
-                Apne area ki kisi bhi samasya (Road, Electricity, Water) ko report karne ke liye 'Report New Complaint' par click karein.
+                To report Any problem in your Area Please Click "Report New Complaint" 
               </p>
             </div>
           ) : (
