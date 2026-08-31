@@ -33,6 +33,8 @@ function App() {
         <Route path="/complaints/success" element={<ComplaintSuccess />} />
         <Route path="/authority/forgotPass" element={<AuthorityForgotPassword />} />
         <Route path="/user/forgotPass" element={<UserForgotPassword />} />
+        <Route path="/forgot-password" element={<UserForgotPassword />} />
+        <Route path="/user/forgot-password" element={<UserForgotPassword />} />
       </Routes>
     </BrowserRouter>
   );

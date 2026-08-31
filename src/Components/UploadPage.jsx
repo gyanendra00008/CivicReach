@@ -130,7 +130,7 @@ export default function UploadPage() {
           fallbackLocation();
           setGpsLoading(false);
         },
-        { timeout: 8000 }
+        { timeout: 60000}
       );
     } else {
       fallbackLocation();

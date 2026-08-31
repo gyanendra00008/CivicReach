@@ -6,31 +6,14 @@ import {
   LogOut,
   RefreshCw,
   MapPin,
-  Tag,
   Clock,
   CheckCircle2,
   AlertTriangle,
-  FileText,
-  Filter,
   Eye,
   X,
-  ExternalLink,
-  ChevronDown
 } from "lucide-react";
 import bgImage from "../assets/img3.webp";
 import { FASTAPI_API_URL } from "../config";
-
-const DEPARTMENTS = [
-  "All",
-  "Electricity",
-  "Water supply",
-  "Road & infrastructure",
-  "Sanitation",
-  "Traffic",
-  "Public health",
-  "Public safety",
-  "Animal control",
-];
 
 export default function AuthorityDashboard() {
   const navigate = useNavigate();
@@ -40,12 +23,6 @@ export default function AuthorityDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState(null);
-
-  // Filters
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedStatus, setSelectedStatus] = useState("All");
-  const [pincodeSearch, setPincodeSearch] = useState("");
-  const [districtFilter, setDistrictFilter] = useState("");
 
   // Image Modal
   const [previewImage, setPreviewImage] = useState(null);
@@ -76,10 +53,16 @@ export default function AuthorityDashboard() {
       setError("");
 
       const params = new URLSearchParams();
-      if (district && district.toLowerCase() !== "all") params.append("district", district);
-      if (category && category.toLowerCase() !== "all") params.append("category", category);
-      if (selectedStatus && selectedStatus.toLowerCase() !== "all") params.append("status_filter", selectedStatus);
-      if (pincodeSearch.trim()) params.append("pincode", pincodeSearch.trim());
+      if (district && district.toLowerCase() !== "all" && district.toLowerCase() !== "all districts") {
+        params.append("district", district);
+      }
+      if (
+        category &&
+        category.toLowerCase() !== "all" &&
+        category.toLowerCase() !== "all categories"
+      ) {
+        params.append("category", category);
+      }
 
       const url = `${FASTAPI_API_URL}/api/problems/authority?${params.toString()}`;
       const response = await fetch(url);
@@ -220,79 +203,26 @@ export default function AuthorityDashboard() {
           </div>
         </div>
 
-        {/* Filter Toolbar */}
-        <div className="bg-[#0B1526] border border-white/10 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
-            {/* Category Select */}
-            <div className="flex items-center gap-2 bg-[#111C31] border border-white/10 rounded-xl px-3 py-2">
-              <Tag size={15} className="text-teal-400 shrink-0" />
-              <select
-                value={selectedCategory}
-                onChange={(e) => {
-                  setSelectedCategory(e.target.value);
-                  fetchComplaints(districtFilter, e.target.value);
-                }}
-                className="bg-transparent outline-none text-xs sm:text-sm text-white"
-              >
-                {DEPARTMENTS.map((d) => (
-                  <option key={d} value={d} className="bg-[#111C31] text-white">
-                    {d === "All" ? "All Categories" : d}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Status Filter */}
-            <div className="flex items-center gap-2 bg-[#111C31] border border-white/10 rounded-xl px-3 py-2">
-              <Filter size={15} className="text-sky-400 shrink-0" />
-              <select
-                value={selectedStatus}
-                onChange={(e) => {
-                  setSelectedStatus(e.target.value);
-                  fetchComplaints(districtFilter, selectedCategory);
-                }}
-                className="bg-transparent outline-none text-xs sm:text-sm text-white"
-              >
-                <option value="All" className="bg-[#111C31] text-white">All Statuses</option>
-                <option value="pending" className="bg-[#111C31] text-white">Pending Only</option>
-                <option value="in-review" className="bg-[#111C31] text-white">In Review Only</option>
-                <option value="resolved" className="bg-[#111C31] text-white">Resolved Only</option>
-              </select>
-            </div>
-
-            {/* Pincode Search */}
-            <div className="flex items-center gap-2 bg-[#111C31] border border-white/10 rounded-xl px-3 py-2 min-w-[140px]">
-              <MapPin size={15} className="text-amber-400 shrink-0" />
-              <input
-                type="text"
-                value={pincodeSearch}
-                onChange={(e) => setPincodeSearch(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && fetchComplaints(districtFilter, selectedCategory)}
-                placeholder="Pincode search..."
-                className="bg-transparent outline-none text-xs sm:text-sm text-white placeholder:text-slate-500 w-full"
-              />
-            </div>
-          </div>
-
-          <button
-            onClick={() => fetchComplaints(districtFilter, selectedCategory)}
-            disabled={loading}
-            className="bg-teal-500 hover:bg-teal-400 text-slate-950 px-4 py-2 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm font-semibold transition-colors"
-          >
-            <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
-            <span>Apply / Refresh</span>
-          </button>
-        </div>
-
         {/* Complaints List / Table */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base sm:text-lg font-semibold text-white">
-              Routed Complaints ({problems.length})
-            </h3>
-            <span className="text-xs text-teal-400 font-medium">
-              District: {districtFilter || "All"}
-            </span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <h3 className="text-base sm:text-lg font-semibold text-white">
+                Routed Complaints ({problems.length})
+              </h3>
+              <span className="text-xs text-teal-400 font-medium bg-teal-500/10 border border-teal-500/20 px-2.5 py-0.5 rounded-full">
+                {authority?.category || "General"} • {authority?.district || "All Districts"}
+              </span>
+            </div>
+
+            <button
+              onClick={() => fetchComplaints(authority?.district, authority?.category)}
+              disabled={loading}
+              className="bg-[#0B1526] hover:bg-white/5 border border-white/10 text-slate-300 px-3.5 py-2 rounded-xl flex items-center justify-center gap-1.5 text-xs sm:text-sm font-medium transition-colors self-start sm:self-auto"
+            >
+              <RefreshCw size={15} className={loading ? "animate-spin text-teal-400" : ""} />
+              <span>Refresh Complaints</span>
+            </button>
           </div>
 
           {error && (

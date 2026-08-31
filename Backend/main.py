@@ -132,13 +132,9 @@ def health_check():
 
 # 1. Reverse Geocoding Route (Supports both /Location/{lan}/{lon} and /Location/{lat}/{lon})
 @app.get("/Location/{lat}/{lon}")
-@app.get("/Location/{lan}/{lon}")
-def convert_coordinates(lat: Optional[float] = None, lan: Optional[float] = None, lon: float = 0.0):
-    actual_lat = lat if lat is not None else lan
-    if actual_lat is None:
-        raise HTTPException(status_code=400, detail="Latitude is required")
-
-    user_location = get_location_details(actual_lat, lon)
+def convert_coordinates(lat: float, lon: float):
+    
+    user_location = get_location_details(lat, lon)
     if user_location:
         return {
             "status": "success",
@@ -299,13 +295,13 @@ def get_authority_problems(
         filtered = []
         for p in all_problems:
             # District filter
-            if district and isinstance(district, str) and district.strip().lower() != "all":
+            if district and isinstance(district, str) and district.strip().lower() not in ["all", "all districts"]:
                 d_str = str(p.get("district") or "").lower()
                 if district.strip().lower() not in d_str:
                     continue
 
             # Category filter (e.g. "Roads" matches "Road & infrastructure")
-            if category and isinstance(category, str) and category.strip().lower() != "all":
+            if category and isinstance(category, str) and category.strip().lower() not in ["all", "all categories"]:
                 c_str = str(p.get("category") or "").lower()
                 req_cat = category.strip().lower()
                 if req_cat not in c_str and c_str not in req_cat:
@@ -417,9 +413,31 @@ def update_status(
                 "message": f"Status updated to '{new_status}' for problem '{data.title}'",
             }
 
-    raise HTTPException(
-        status_code=404, detail="Problem not found for given ID / Pincode + Title"
-    )
+# 7. Helper to Fetch Image URL (by pincode & title)
+def get_image_url(pincode: int | str, title: str) -> Optional[str]:
+    try:
+        pincode_clean = int(str(pincode).strip().replace(" ", ""))
+    except ValueError:
+        pincode_clean = str(pincode).strip()
+
+    document = collection.find_one({
+        "pincode": pincode_clean,
+        "problems.title": title.strip()
+    })
+
+    if document:
+        for problem in document.get("problems", []):
+            if problem.get("title") == title.strip():
+                return problem.get("img_url")
+    return None
+
+
+@app.get("/api/problems/image")
+def fetch_image_url(pincode: str, title: str):
+    url = get_image_url(pincode, title)
+    if url:
+        return {"status": "success", "img_url": url}
+    raise HTTPException(status_code=404, detail="Image not found for given pincode and title")
 
 
 if __name__ == "__main__":
