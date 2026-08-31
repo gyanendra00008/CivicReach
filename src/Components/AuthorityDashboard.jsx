@@ -38,8 +38,6 @@ export default function AuthorityDashboard() {
       try {
             const authData = JSON.parse(authStr);
             setAuthority(authData);
-            setSelectedCategory(authData.category || "All");
-            setDistrictFilter(authData.district || "");
             fetchComplaints(authData.district, authData.category);
           } catch (e) {
       navigate("/authority", { replace: true });
