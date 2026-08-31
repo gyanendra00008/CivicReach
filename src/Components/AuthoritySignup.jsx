@@ -214,7 +214,7 @@ export default function AuthoritySignup() {
             </div>
 
             <p className="text-[11px] text-teal-400/80 bg-teal-500/10 p-2.5 rounded-lg border border-teal-500/20">
-              📌 Aapke district aur category ke hisaab se complaints automatically aapke dashboard me route hongi.
+              📌 The Problems will be Automatically Route in your DashBoard according to your district and Category
             </p>
 
             {apiError && (
