@@ -232,14 +232,14 @@ export default function AuthorityDashboard() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-16 text-slate-400 gap-3">
               <RefreshCw size={32} className="animate-spin text-teal-400" />
-              <p className="text-sm">Complaints load ho rahi hain...</p>
+              <p className="text-sm">Complaints loading...</p>
             </div>
           ) : problems.length === 0 ? (
             <div className="bg-[#0B1526]/50 border border-dashed border-white/10 rounded-2xl py-12 px-4 flex flex-col items-center justify-center text-center">
               <CheckCircle2 size={32} className="text-emerald-400 mb-2" />
-              <p className="text-base sm:text-lg font-medium text-white">Koi complaint pending nahi hai</p>
+              <p className="text-base sm:text-lg font-medium text-white">No complaint is pending</p>
               <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                Is district aur category ke liye sabhi complaints resolved ya clear hain.
+                All the problems of this district has been resolved or clear
               </p>
             </div>
           ) : (
