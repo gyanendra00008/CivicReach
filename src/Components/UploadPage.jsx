@@ -345,7 +345,7 @@ export default function UploadPage() {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Samasya ke baare me vistar se batayein..."
+                  placeholder="Describe The problem in detail..."
                   rows={3}
                   className="flex-1 bg-transparent outline-none text-sm sm:text-base text-white placeholder:text-slate-600 resize-none"
                 />
