@@ -43,14 +43,14 @@ const HomePage = () => {
             </div>
 
             {/* Action Buttons - Desktop */}
-            <div className="hidden lg:flex items-center gap-4">
+            {/* <div className="hidden lg:flex items-center gap-4">
               <button onClick={() => navigate( '/complaints')}className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
                 Track Complaint
               </button>
               <button onClick={() => navigate('/complaints/new')}className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-7 py-4 rounded-md transition-all shadow-[0_0_15px_rgba(45,212,191,0.4)]">
                 New Complaint
               </button>
-            </div>
+            </div> */}
 
             {/* Mobile Hamburger Toggle */}
             <button
