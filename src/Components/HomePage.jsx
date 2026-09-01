@@ -72,7 +72,7 @@ const HomePage = () => {
               <a href="#about" onClick={() => setMenuOpen(false)} className="text-gray-300 text-[16px] font-medium border-b border-white/10 pb-3">About</a>
               <a href="#contact" onClick={() => setMenuOpen(false)} className="text-gray-300 text-[16px] font-medium border-b border-white/10 pb-3">Contact</a>
 
-              <div className="flex flex-col gap-3 mt-2">
+              {/* <div className="flex flex-col gap-3 mt-2">
                 <button
                   onClick={() => { setMenuOpen(false); navigate('/complaints'); }}
                   className="bg-teal-400 hover:bg-teal-300 text-black text-[16px] font-bold px-6 py-3.5 rounded-md transition-all w-full"
@@ -85,7 +85,7 @@ const HomePage = () => {
                 >
                   New Complaint
                 </button>
-              </div>
+              </div> */}
             </div>
           )}
         </nav>
