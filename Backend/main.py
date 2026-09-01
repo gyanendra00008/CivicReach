@@ -403,9 +403,3 @@ def fetch_image_url(pincode: str, title: str):
     if url:
         return {"status": "success", "img_url": url}
     raise HTTPException(status_code=404, detail="Image not found for given pincode and title")
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
