@@ -16,26 +16,18 @@ env_paths = [
     Path(".env"),
     Path("../.env"),
     Path(__file__).resolve().parent / ".env",
-    Path(__file__).resolve().parent.parent / ".env",
-    Path(__file__).resolve().parent.parent / "authentication" / ".env",
 ]
 for path in env_paths:
     if path.exists():
         load_dotenv(path)
 
-# MongoDB Connection
+
 MONGO_URI = os.getenv("MONGO_URI") or os.getenv("MONGODB_URI") or "mongodb://localhost:27017"
 client = MongoClient(MONGO_URI)
 database = client["ProblemsDB"]
 collection = database["ProblemsCollection"]
 
-app = FastAPI(
-    title="CivicReach FastAPI Backend",
-    description="Backend API for CivicReach Problems, Geolocation & Authority Routing",
-    version="1.0.0",
-)
-
-# CORS Configuration
+app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -45,7 +37,7 @@ app.add_middleware(
 )
 
 
-# Pydantic Request Models
+
 class ProblemCreate(BaseModel):
     pincode: int | str
     district: Optional[str] = "Unknown District"
@@ -61,15 +53,11 @@ class ProblemStatusUpdate(BaseModel):
     problem_id: Optional[str] = None
     pincode: Optional[int | str] = None
     title: Optional[str] = None
-    new_status: str  # 'pending', 'in-review', 'resolved'
+    new_status: str 
 
 
-# Geolocation helper
+
 def get_location_details(lat: float, lon: float):
-    """
-    Reverse Geocoding using OpenStreetMap Nominatim API with complete address parsing.
-    Accurately resolves District, State, City, Postcode, and Formatted Address across India.
-    """
     url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=json&addressdetails=1"
     headers = {"User-Agent": "CivicReach_GeoApp/1.0 (contact@civicreach.app)"}
     try:
@@ -79,32 +67,14 @@ def get_location_details(lat: float, lon: float):
             if "address" in data:
                 addr = data["address"]
                 state = addr.get("state") or addr.get("state_code") or "Unknown State"
-                district = (
-                    addr.get("state_district")
-                    or addr.get("district")
-                    or addr.get("county")
-                    or addr.get("city_district")
-                    or addr.get("city")
-                    or addr.get("town")
-                    or addr.get("suburb")
-                    or "Unknown District"
-                )
+                district = (addr.get("state_district") or addr.get("district") or addr.get("city_district") or "Unknown District")
                 city = (
                     addr.get("city")
                     or addr.get("town")
-                    or addr.get("village")
-                    or addr.get("suburb")
-                    or addr.get("neighbourhood")
                     or district
                 )
                 raw_pincode = addr.get("postcode") or addr.get("postal_code") or "postcode not found"
-                if raw_pincode != "postcode not found":
-                    pincode = str(raw_pincode).split(",")[0].strip().replace(" ", "")
-                else:
-                    pincode = "postcode not found"
-
                 display_name = data.get("display_name", "")
-
                 return {
                     "district": district,
                     "state": state,
@@ -117,7 +87,6 @@ def get_location_details(lat: float, lon: float):
     return None
 
 
-# Legacy helper returning list for backward compatibility
 def getlocation(lat: float, lon: float):
     res = get_location_details(lat, lon)
     if res:
@@ -127,13 +96,10 @@ def getlocation(lat: float, lon: float):
 
 @app.get("/")
 def health_check():
-    return {"status": "ok", "service": "CivicReach FastAPI Backend (Unified)", "version": "1.1.0"}
+    return {"status": "ok"}
 
-
-# 1. Reverse Geocoding Route (Supports both /Location/{lan}/{lon} and /Location/{lat}/{lon})
 @app.get("/Location/{lat}/{lon}")
-def convert_coordinates(lat: float, lon: float):
-    
+def convert_coordinates(lat: float, lon: float):    
     user_location = get_location_details(lat, lon)
     if user_location:
         return {
@@ -147,7 +113,6 @@ def convert_coordinates(lat: float, lon: float):
     return {"status": "error", "message": "Could not determine location"}
 
 
-# 2. Get Problems by User Email (Citizen Dashboard)
 @app.get("/api/problems/user/{email}")
 def get_user_problems(email: str):
     normalized_email = email.strip().lower()
@@ -208,7 +173,7 @@ def get_user_problems(email: str):
         )
 
 
-# 3. Add New Problem (Routing by Pincode, District & Category)
+
 @app.post("/api/problems", status_code=status.HTTP_201_CREATED)
 def create_problem(problem: ProblemCreate):
     try:
@@ -255,7 +220,7 @@ def create_problem(problem: ProblemCreate):
         )
 
 
-# 4. Authority Routing API: Get Problems by District & Category
+
 @app.get("/api/problems/authority")
 def get_authority_problems(
     district: Optional[str] = None,
