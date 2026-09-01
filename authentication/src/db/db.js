@@ -11,14 +11,8 @@ async function connectDB() {
     });
     console.log("Connected to MongoDB database successfully");
   } catch (error) {
-    console.error("❌ MongoDB Connection Error:", error.message);
-    if (error.name === "MongooseServerSelectionError" || error.message.includes("ETIMEDOUT")) {
-      console.error("\n⚠️  IMPORTANT: If your server timed out connecting to MongoDB Atlas:");
-      console.error("1. Go to MongoDB Atlas (https://cloud.mongodb.com)");
-      console.error("2. Navigate to 'Network Access' -> 'IP Access List'");
-      console.error("3. Click 'Add IP Address' and add '0.0.0.0/0' (Allow Access from Anywhere) so Render can connect");
-      console.error("4. Check if your database username and password in MONGODB_URI are correct\n");
-    }
+    console.error(" MongoDB Connection Error:", error.message);
+   
     throw error;
   }
 }
