@@ -136,7 +136,7 @@ export default function OtpVerify() {
             </button>
           </form>
 
-          <p className="text-center text-xs sm:text-sm text-slate-500 mt-6">
+          {/* <p className="text-center text-xs sm:text-sm text-slate-500 mt-6">
             Didn't get the code?{" "}
             <button
               onClick={handleResend}
@@ -145,7 +145,7 @@ export default function OtpVerify() {
             >
               Resend OTP
             </button>
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
