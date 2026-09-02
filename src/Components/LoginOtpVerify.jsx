@@ -199,14 +199,14 @@ export default function LoginOtpVerify() {
               <span>Back to Login</span>
             </Link>
 
-            <button
+            {/* <button
               onClick={handleResend}
               disabled={resending}
               type="button"
               className="text-teal-400 hover:text-teal-300 font-medium"
             >
               {resending ? "Resending..." : "Resend OTP"}
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
